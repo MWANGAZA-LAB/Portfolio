@@ -1,4 +1,4 @@
-# 🚀 CMO Portfolio - Senior Software Engineer
+# 🚀 Collins Mwanga Okoth (CMO) Portfolio - Software Developer
 
 A modern, responsive portfolio website showcasing expertise in Bitcoin, fintech applications, and full-stack development.
 
@@ -8,7 +8,7 @@ Visit the live portfolio: [https://mwangaza-lab.github.io/Portfolio/](https://mw
 
 ## 👨‍💻 About
 
-Professional portfolio of CMO, a senior software engineer based in **Nairobi, Kenya**, specializing in:
+Professional portfolio of Collins Mwanga Okoth (CMO), a software developer based in **Nairobi, Kenya**, specializing in:
 
 - 🪙 **Bitcoin & Cryptocurrency Applications**
 - 🤖 **AI-Powered Chatbots & Educational Tools**
