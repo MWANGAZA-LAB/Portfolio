@@ -137,6 +137,7 @@ Portfolio/
 
 - **GitHub:** [@MWANGAZA-LAB](https://github.com/MWANGAZA-LAB)
 - **Twitter:** [@MWANGAZALAB254](https://x.com/MWANGAZALAB254)
+- **WhatsApp:** [+254 712 826 551](https://wa.me/254712826551)
 - **Location:** Nairobi, Kenya 🇰🇪
 - **Timezone:** UTC +03:00
 
