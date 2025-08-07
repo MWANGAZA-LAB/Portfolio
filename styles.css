@@ -55,6 +55,20 @@
     --transition-slow: 0.5s ease-in-out;
 }
 
+/* Dark Theme Variables */
+[data-theme="dark"] {
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-light: #94a3b8;
+    --background: #0f172a;
+    --background-secondary: #1e293b;
+    --background-dark: #020617;
+    --border-color: #334155;
+    --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-large: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
 body {
     font-family: var(--font-family);
     line-height: 1.6;
@@ -79,6 +93,10 @@ body {
     border-bottom: 1px solid var(--border-color);
     z-index: 1000;
     transition: var(--transition-normal);
+}
+
+[data-theme="dark"] .navbar {
+    background: rgba(15, 23, 42, 0.95);
 }
 
 .nav-container {
@@ -133,6 +151,37 @@ body {
     width: 100%;
 }
 
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-left: var(--spacing-lg);
+}
+
+.theme-toggle:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.theme-toggle i {
+    font-size: var(--font-size-lg);
+    transition: var(--transition-normal);
+}
+
+[data-theme="dark"] .theme-toggle i:before {
+    content: "\f185"; /* fa-sun */
+}
+
 .hamburger {
     display: none;
     flex-direction: column;
@@ -155,6 +204,10 @@ body {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .hero::before {
@@ -440,6 +493,10 @@ section {
 .project-card.featured {
     border: 2px solid var(--primary-color);
     background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+}
+
+[data-theme="dark"] .project-card.featured {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
 }
 
 .project-header {
@@ -767,6 +824,13 @@ section {
 
     .nav-menu.active {
         left: 0;
+    }
+
+    .theme-toggle {
+        margin-left: var(--spacing-md);
+        width: 40px;
+        height: 40px;
+        padding: var(--spacing-xs);
     }
 
     .hamburger {
