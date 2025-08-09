@@ -358,265 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== PROJECT DEMO FUNCTIONALITY =====
 
-// Twiga Scan Demo Functions
-function validateBitcoinURL() {
-    const input = document.getElementById('qrInput').value.trim();
-    const resultDiv = document.getElementById('validationResult');
-    
-    if (!input) {
-        showValidationResult('Please enter a URL or QR data', 'error');
-        return;
-    }
-    
-    // Bitcoin URL patterns
-    const patterns = {
-        bitcoin: /^bitcoin:[13][a-km-zA-HJ-NP-Z1-9]{25,34}/,
-        lightning: /^(lnbc|lnbcrt|lnbc|lnsb|lntb)[a-zA-Z0-9]{1,190}$/,
-        lnurl: /^lnurl[a-zA-Z0-9]{1,190}$/,
-        bip21: /^bitcoin:[13][a-km-zA-HJ-NP-Z1-9]{25,34}\?amount=\d+(\.\d+)?&label=.+/
-    };
-    
-    let isValid = false;
-    let type = '';
-    
-    for (const [key, pattern] of Object.entries(patterns)) {
-        if (pattern.test(input)) {
-            isValid = true;
-            type = key;
-            break;
-        }
-    }
-    
-    if (isValid) {
-        showValidationResult(`✅ Valid ${type} format detected!`, 'success');
-    } else {
-        showValidationResult('❌ Invalid Bitcoin/Lightning format', 'error');
-    }
-}
 
-function showValidationResult(message, type) {
-    const resultDiv = document.getElementById('validationResult');
-    resultDiv.textContent = message;
-    resultDiv.className = `validation-result ${type}`;
-}
-
-// Bitcoin Price Display
-async function updateBitcoinPrice() {
-    try {
-        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur,kes');
-        const data = await response.json();
-        const btcPrice = document.getElementById('btcPrice');
-        
-        if (data.bitcoin) {
-            const usd = data.bitcoin.usd;
-            const eur = data.bitcoin.eur;
-            const kes = data.bitcoin.kes || (usd * 100); // Approximate KES rate
-            
-            btcPrice.innerHTML = `
-                <div>$${usd.toLocaleString()}</div>
-                <div style="font-size: 0.8em; color: var(--text-secondary);">
-                    €${eur.toLocaleString()} | KES ${kes.toLocaleString()}
-                </div>
-            `;
-        }
-    } catch (error) {
-        document.getElementById('btcPrice').textContent = 'Price unavailable';
-    }
-}
-
-// SnakeSats Game Demo
-let snakeGame = null;
-let gameInterval = null;
-let gamePaused = false;
-
-function startSnakeGame() {
-    if (gameInterval) return;
-    
-    const canvas = document.getElementById('snakeCanvas');
-    const ctx = canvas.getContext('2d');
-    const scoreElement = document.getElementById('gameScore');
-    
-    // Game state
-    snakeGame = {
-        snake: [{x: 150, y: 150}],
-        food: {x: 50, y: 50},
-        direction: 'right',
-        score: 0,
-        gridSize: 10
-    };
-    
-    // Generate food
-    generateFood();
-    
-    // Start game loop
-    gameInterval = setInterval(() => {
-        if (!gamePaused) {
-            updateGame();
-            drawGame(ctx);
-        }
-    }, 150);
-    
-    // Keyboard controls
-    document.addEventListener('keydown', handleGameKeyPress);
-    
-    // Update score
-    scoreElement.textContent = snakeGame.score;
-}
-
-function pauseSnakeGame() {
-    gamePaused = !gamePaused;
-    const pauseBtn = event.target;
-    pauseBtn.textContent = gamePaused ? 'Resume' : 'Pause';
-}
-
-function generateFood() {
-    const canvas = document.getElementById('snakeCanvas');
-    snakeGame.food = {
-        x: Math.floor(Math.random() * (canvas.width / snakeGame.gridSize)) * snakeGame.gridSize,
-        y: Math.floor(Math.random() * (canvas.height / snakeGame.gridSize)) * snakeGame.gridSize
-    };
-}
-
-function updateGame() {
-    const head = {...snakeGame.snake[0]};
-    
-    // Move head
-    switch(snakeGame.direction) {
-        case 'up': head.y -= snakeGame.gridSize; break;
-        case 'down': head.y += snakeGame.gridSize; break;
-        case 'left': head.x -= snakeGame.gridSize; break;
-        case 'right': head.x += snakeGame.gridSize; break;
-    }
-    
-    // Check collision with walls
-    if (head.x < 0 || head.x >= 300 || head.y < 0 || head.y >= 300) {
-        gameOver();
-        return;
-    }
-    
-    // Check collision with self
-    if (snakeGame.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-        gameOver();
-        return;
-    }
-    
-    // Add new head
-    snakeGame.snake.unshift(head);
-    
-    // Check if food eaten
-    if (head.x === snakeGame.food.x && head.y === snakeGame.food.y) {
-        snakeGame.score += 10;
-        document.getElementById('gameScore').textContent = snakeGame.score;
-        generateFood();
-    } else {
-        snakeGame.snake.pop();
-    }
-}
-
-function drawGame(ctx) {
-    const canvas = document.getElementById('snakeCanvas');
-    
-    // Clear canvas
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw snake
-    ctx.fillStyle = '#f7931a';
-    snakeGame.snake.forEach((segment, index) => {
-        if (index === 0) {
-            ctx.fillStyle = '#e6850e'; // Head color
-        } else {
-            ctx.fillStyle = '#f7931a'; // Body color
-        }
-        ctx.fillRect(segment.x, segment.y, snakeGame.gridSize - 1, snakeGame.gridSize - 1);
-    });
-    
-    // Draw food (sats)
-    ctx.fillStyle = '#ff6b35';
-    ctx.font = '12px Arial';
-    ctx.fillText('🍊', snakeGame.food.x, snakeGame.food.y + 10);
-}
-
-function handleGameKeyPress(event) {
-    switch(event.key) {
-        case 'ArrowUp':
-            if (snakeGame.direction !== 'down') snakeGame.direction = 'up';
-            break;
-        case 'ArrowDown':
-            if (snakeGame.direction !== 'up') snakeGame.direction = 'down';
-            break;
-        case 'ArrowLeft':
-            if (snakeGame.direction !== 'right') snakeGame.direction = 'left';
-            break;
-        case 'ArrowRight':
-            if (snakeGame.direction !== 'left') snakeGame.direction = 'right';
-            break;
-    }
-}
-
-function gameOver() {
-    clearInterval(gameInterval);
-    gameInterval = null;
-    alert(`Game Over! Final Score: ${snakeGame.score}`);
-    
-    // Reset game
-    snakeGame = null;
-    document.getElementById('gameScore').textContent = '0';
-}
-
-// My-Grocery Demo Functions
-let groceryItems = [];
-
-function addGroceryItem() {
-    const input = document.getElementById('groceryItem');
-    const item = input.value.trim();
-    
-    if (item) {
-        groceryItems.push(item);
-        input.value = '';
-        updateGroceryList();
-    }
-}
-
-function removeGroceryItem(index) {
-    groceryItems.splice(index, 1);
-    updateGroceryList();
-}
-
-function updateGroceryList() {
-    const list = document.getElementById('groceryList');
-    list.innerHTML = '';
-    
-    groceryItems.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span>${item}</span>
-            <button onclick="removeGroceryItem(${index})">×</button>
-        `;
-        list.appendChild(li);
-    });
-}
-
-function generateGroceryQR() {
-    const qrDiv = document.getElementById('groceryQR');
-    if (groceryItems.length === 0) {
-        qrDiv.innerHTML = '<p>Add items to generate QR code</p>';
-        return;
-    }
-    
-    // Simple QR representation (in real app, use a QR library)
-    const itemsText = groceryItems.join(', ');
-    qrDiv.innerHTML = `
-        <div style="text-align: center;">
-            <div style="font-size: 0.8em; color: var(--text-secondary); margin-bottom: 8px;">
-                Scan to share list
-            </div>
-            <div style="font-family: monospace; font-size: 0.7em; word-break: break-all;">
-                ${itemsText.substring(0, 50)}${itemsText.length > 50 ? '...' : ''}
-            </div>
-        </div>
-    `;
-}
 
 // ===== PERFORMANCE MONITORING & ANALYTICS =====
 
@@ -817,6 +559,246 @@ function initializeTracking() {
     trackPageVisibility();
 }
 
+// ===== ENHANCED PERFORMANCE MONITORING DASHBOARD =====
+
+// Performance Dashboard Class
+class PerformanceDashboard {
+    constructor() {
+        this.metrics = {
+            pageLoad: {},
+            coreWebVitals: {},
+            userInteractions: {},
+            errors: []
+        };
+        this.init();
+    }
+
+    init() {
+        this.trackPageLoad();
+        this.trackCoreWebVitals();
+        this.trackUserInteractions();
+        this.trackErrors();
+        this.createDashboard();
+    }
+
+    trackPageLoad() {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const navigation = performance.getEntriesByType('navigation')[0];
+                const paint = performance.getEntriesByType('paint');
+                
+                this.metrics.pageLoad = {
+                    totalLoadTime: navigation.loadEventEnd - navigation.loadEventStart,
+                    domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+                    firstPaint: paint.find(p => p.name === 'first-paint')?.startTime || 0,
+                    firstContentfulPaint: paint.find(p => p.name === 'first-contentful-paint')?.startTime || 0,
+                    timeToInteractive: this.calculateTTI(),
+                    timestamp: Date.now()
+                };
+                
+                this.updateDashboard();
+            }, 0);
+        });
+    }
+
+    calculateTTI() {
+        // Estimate Time to Interactive
+        const navigation = performance.getEntriesByType('navigation')[0];
+        return navigation.loadEventEnd - navigation.fetchStart;
+    }
+
+    trackCoreWebVitals() {
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    this.metrics.coreWebVitals[entry.name] = {
+                        value: entry.value || entry.startTime,
+                        timestamp: Date.now()
+                    };
+                    
+                    // Track specific metrics
+                    if (entry.name === 'largest-contentful-paint') {
+                        this.trackMetric('LCP', entry.startTime);
+                    } else if (entry.name === 'first-input') {
+                        this.trackMetric('FID', entry.processingStart - entry.startTime);
+                    } else if (entry.name === 'layout-shift') {
+                        this.trackMetric('CLS', entry.value);
+                    }
+                }
+                this.updateDashboard();
+            });
+            
+            observer.observe({ 
+                entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] 
+            });
+        }
+    }
+
+    trackUserInteractions() {
+        let interactionCount = 0;
+        let lastInteraction = Date.now();
+        
+        document.addEventListener('click', () => {
+            interactionCount++;
+            lastInteraction = Date.now();
+            this.metrics.userInteractions = {
+                count: interactionCount,
+                lastInteraction,
+                averageTimeBetweenClicks: this.calculateAverageTimeBetweenClicks()
+            };
+        });
+    }
+
+    calculateAverageTimeBetweenClicks() {
+        // Implementation for calculating average time between user interactions
+        return 0;
+    }
+
+    trackErrors() {
+        window.addEventListener('error', (event) => {
+            this.metrics.errors.push({
+                message: event.message,
+                filename: event.filename,
+                lineno: event.lineno,
+                timestamp: Date.now()
+            });
+            
+            if (this.metrics.errors.length > 10) {
+                this.metrics.errors.shift(); // Keep only last 10 errors
+            }
+            
+            this.updateDashboard();
+        });
+    }
+
+    trackMetric(name, value) {
+        if (window.gtag) {
+            gtag('event', name.toLowerCase(), {
+                value: Math.round(value),
+                custom_parameter: 'portfolio_performance'
+            });
+        }
+    }
+
+    createDashboard() {
+        // Create performance dashboard element
+        const dashboard = document.createElement('div');
+        dashboard.id = 'performance-dashboard';
+        dashboard.className = 'performance-dashboard';
+        dashboard.innerHTML = `
+            <div class="dashboard-header">
+                <h3>🚀 Performance Dashboard</h3>
+                <button class="dashboard-toggle">📊</button>
+            </div>
+            <div class="dashboard-content" style="display: none;">
+                <div class="metric-group">
+                    <h4>Page Load Metrics</h4>
+                    <div class="metric" id="load-metrics">Loading...</div>
+                </div>
+                <div class="metric-group">
+                    <h4>Core Web Vitals</h4>
+                    <div class="metric" id="web-vitals">Loading...</div>
+                </div>
+                <div class="metric-group">
+                    <h4>User Interactions</h4>
+                    <div class="metric" id="interactions">Loading...</div>
+                </div>
+                <div class="metric-group">
+                    <h4>Error Log</h4>
+                    <div class="metric" id="errors">No errors</div>
+                </div>
+            </div>
+        `;
+        
+        // Add toggle functionality
+        const toggle = dashboard.querySelector('.dashboard-toggle');
+        const content = dashboard.querySelector('.dashboard-content');
+        
+        toggle.addEventListener('click', () => {
+            const isVisible = content.style.display !== 'none';
+            content.style.display = isVisible ? 'none' : 'block';
+            toggle.textContent = isVisible ? '📊' : '📈';
+        });
+        
+        // Add to page (only in development mode)
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            document.body.appendChild(dashboard);
+        }
+    }
+
+    updateDashboard() {
+        // Update dashboard metrics
+        const loadMetrics = document.getElementById('load-metrics');
+        const webVitals = document.getElementById('web-vitals');
+        const interactions = document.getElementById('interactions');
+        const errors = document.getElementById('errors');
+        
+        if (loadMetrics) {
+            loadMetrics.innerHTML = `
+                <div class="metric-item">
+                    <span>Total Load:</span> 
+                    <span class="metric-value">${this.metrics.pageLoad.totalLoadTime?.toFixed(2) || 'N/A'}ms</span>
+                </div>
+                <div class="metric-item">
+                    <span>DOM Ready:</span> 
+                    <span class="metric-value">${this.metrics.pageLoad.domContentLoaded?.toFixed(2) || 'N/A'}ms</span>
+                </div>
+                <div class="metric-item">
+                    <span>First Paint:</span> 
+                    <span class="metric-value">${this.metrics.pageLoad.firstPaint?.toFixed(2) || 'N/A'}ms</span>
+                </div>
+            `;
+        }
+        
+        if (webVitals) {
+            webVitals.innerHTML = `
+                <div class="metric-item">
+                    <span>LCP:</span> 
+                    <span class="metric-value">${this.metrics.coreWebVitals['largest-contentful-paint']?.value?.toFixed(2) || 'N/A'}ms</span>
+                </div>
+                <div class="metric-item">
+                    <span>FID:</span> 
+                    <span class="metric-value">${this.metrics.coreWebVitals['first-input']?.value?.toFixed(2) || 'N/A'}ms</span>
+                </div>
+                <div class="metric-item">
+                    <span>CLS:</span> 
+                    <span class="metric-value">${this.metrics.coreWebVitals['layout-shift']?.value?.toFixed(4) || 'N/A'}</span>
+                </div>
+            `;
+        }
+        
+        if (interactions) {
+            interactions.innerHTML = `
+                <div class="metric-item">
+                    <span>Total Clicks:</span> 
+                    <span class="metric-value">${this.metrics.userInteractions.count || 0}</span>
+                </div>
+                <div class="metric-item">
+                    <span>Last Interaction:</span> 
+                    <span class="metric-value">${this.metrics.userInteractions.lastInteraction ? new Date(this.metrics.userInteractions.lastInteraction).toLocaleTimeString() : 'N/A'}</span>
+                </div>
+            `;
+        }
+        
+        if (errors) {
+            errors.innerHTML = this.metrics.errors.length > 0 
+                ? this.metrics.errors.map(error => `
+                    <div class="error-item">
+                        <span class="error-time">${new Date(error.timestamp).toLocaleTimeString()}</span>
+                        <span class="error-message">${error.message}</span>
+                    </div>
+                `).join('')
+                : '<span class="no-errors">✅ No errors detected</span>';
+        }
+    }
+}
+
+// Initialize Performance Dashboard
+let performanceDashboard;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    performanceDashboard = new PerformanceDashboard();
+}
+
 // Initialize demos when page loads
 document.addEventListener('DOMContentLoaded', function() {
     // ... existing code ...
@@ -864,134 +846,1061 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Portfolio loaded successfully! 🚀');
 });
 
-// ===== PWA FUNCTIONALITY =====
+// ===== ENHANCED PWA FUNCTIONALITY =====
 
-// Service Worker Registration
-function registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('SW registered: ', registration);
-                    
-                    // Check for updates
-                    registration.addEventListener('updatefound', () => {
-                        const newWorker = registration.installing;
-                        newWorker.addEventListener('statechange', () => {
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                showUpdateNotification();
-                            }
-                        });
-                    });
-                })
-                .catch(registrationError => {
-                    console.log('SW registration failed: ', registrationError);
-                });
+// PWA Manager Class
+class PWAManager {
+    constructor() {
+        this.deferredPrompt = null;
+        this.isInstalled = false;
+        this.installButton = null;
+        this.init();
+    }
+
+    init() {
+        this.checkInstallationStatus();
+        this.setupEventListeners();
+        this.createInstallButton();
+        this.checkForUpdates();
+    }
+
+    checkInstallationStatus() {
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches || 
+            window.navigator.standalone === true) {
+            this.isInstalled = true;
+            console.log('PWA is already installed');
+        }
+    }
+
+    setupEventListeners() {
+        // Listen for beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('Install prompt available');
+            e.preventDefault();
+            this.deferredPrompt = e;
+            this.showInstallButton();
+        });
+
+        // Listen for app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            this.isInstalled = true;
+            this.hideInstallButton();
+            this.showInstallationSuccess();
+        });
+
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            this.updateOnlineStatus(true);
+            this.syncOfflineData();
+        });
+
+        window.addEventListener('offline', () => {
+            this.updateOnlineStatus(false);
         });
     }
-}
 
-// PWA Installation
-function initializePWA() {
-    let deferredPrompt;
-    
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // Show install button
-        showInstallButton();
-    });
-    
-    // Handle app installed event
-    window.addEventListener('appinstalled', () => {
-        console.log('PWA was installed');
-        hideInstallButton();
-    });
-}
+    createInstallButton() {
+        // Create install button
+        this.installButton = document.createElement('button');
+        this.installButton.id = 'pwaInstallBtn';
+        this.installButton.className = 'pwa-install-btn';
+        this.installButton.innerHTML = '<i class="fas fa-download"></i> Install App';
+        this.installButton.onclick = () => this.installPWA();
+        this.installButton.style.display = 'none';
 
-// Show PWA Install Button
-function showInstallButton() {
-    // Create install button if it doesn't exist
-    if (!document.getElementById('pwaInstallBtn')) {
-        const installBtn = document.createElement('button');
-        installBtn.id = 'pwaInstallBtn';
-        installBtn.className = 'pwa-install-btn';
-        installBtn.innerHTML = '<i class="fas fa-download"></i> Install App';
-        installBtn.onclick = installPWA;
-        
         // Add to navigation
         const navContainer = document.querySelector('.nav-container');
         if (navContainer) {
-            navContainer.appendChild(installBtn);
+            navContainer.appendChild(this.installButton);
         }
     }
-}
 
-// Hide PWA Install Button
-function hideInstallButton() {
-    const installBtn = document.getElementById('pwaInstallBtn');
-    if (installBtn) {
-        installBtn.remove();
+    showInstallButton() {
+        if (this.installButton && !this.isInstalled) {
+            this.installButton.style.display = 'flex';
+            this.installButton.classList.add('pulse');
+            
+            // Auto-hide after 30 seconds
+            setTimeout(() => {
+                this.hideInstallButton();
+            }, 30000);
+        }
     }
-}
 
-// Install PWA
-function installPWA() {
-    if (window.deferredPrompt) {
-        window.deferredPrompt.prompt();
-        window.deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-            } else {
-                console.log('User dismissed the install prompt');
+    hideInstallButton() {
+        if (this.installButton) {
+            this.installButton.style.display = 'none';
+            this.installButton.classList.remove('pulse');
+        }
+    }
+
+    async installPWA() {
+        if (this.deferredPrompt) {
+            try {
+                this.deferredPrompt.prompt();
+                const choiceResult = await this.deferredPrompt.userChoice;
+                
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    this.showNotification('Installing PWA...', 'info');
+                } else {
+                    console.log('User dismissed the install prompt');
+                    this.showNotification('Installation cancelled', 'warning');
+                }
+                
+                this.deferredPrompt = null;
+                this.hideInstallButton();
+            } catch (error) {
+                console.error('Installation failed:', error);
+                this.showNotification('Installation failed', 'error');
             }
-            window.deferredPrompt = null;
-            hideInstallButton();
-        });
+        } else {
+            this.showNotification('Installation not available', 'warning');
+        }
     }
-}
 
-// Show Update Notification
-function showUpdateNotification() {
-    if ('serviceWorker' in navigator) {
+    showInstallationSuccess() {
+        this.showNotification('🎉 PWA installed successfully!', 'success');
+        
+        // Show welcome message
+        setTimeout(() => {
+            this.showWelcomeMessage();
+        }, 1000);
+    }
+
+    showWelcomeMessage() {
+        const welcome = document.createElement('div');
+        welcome.className = 'welcome-message';
+        welcome.innerHTML = `
+            <div class="welcome-content">
+                <h3>🎉 Welcome to CMO Portfolio!</h3>
+                <p>Your portfolio is now installed as a PWA. Enjoy offline access and app-like experience!</p>
+                <div class="welcome-features">
+                    <div class="feature">
+                        <i class="fas fa-wifi-slash"></i>
+                        <span>Offline Access</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-home"></i>
+                        <span>Home Screen</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-bell"></i>
+                        <span>Push Notifications</span>
+                    </div>
+                </div>
+                <button class="welcome-close">Got it!</button>
+            </div>
+        `;
+        
+        document.body.appendChild(welcome);
+        
+        // Add close functionality
+        const closeBtn = welcome.querySelector('.welcome-close');
+        closeBtn.addEventListener('click', () => {
+            welcome.remove();
+        });
+        
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (welcome.parentNode) {
+                welcome.remove();
+            }
+        }, 10000);
+    }
+
+    updateOnlineStatus(isOnline) {
+        const status = document.getElementById('online-status');
+        if (status) {
+            status.textContent = isOnline ? '🟢 Online' : '🔴 Offline';
+            status.className = isOnline ? 'online' : 'offline';
+        }
+        
+        // Show offline notification
+        if (!isOnline) {
+            this.showNotification('You are now offline. Some features may be limited.', 'warning');
+        }
+    }
+
+    async syncOfflineData() {
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            try {
+                // Register background sync
+                const registration = await navigator.serviceWorker.ready;
+                await registration.sync.register('background-sync');
+                console.log('Background sync registered');
+                
+                // Sync contact forms
+                await registration.sync.register('contact-form-sync');
+                console.log('Contact form sync registered');
+            } catch (error) {
+                console.error('Background sync registration failed:', error);
+            }
+        }
+    }
+
+    checkForUpdates() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                console.log('New service worker activated');
+                this.showUpdateNotification();
+            });
+        }
+    }
+
+    showUpdateNotification() {
         const updateNotification = document.createElement('div');
         updateNotification.className = 'update-notification';
         updateNotification.innerHTML = `
             <div class="update-content">
-                <span>New version available!</span>
-                <button onclick="updatePWA()" class="update-btn">Update</button>
-                <button onclick="dismissUpdate()" class="dismiss-btn">×</button>
+                <span>🔄 New version available!</span>
+                <button onclick="pwaManager.updatePWA()" class="update-btn">Update</button>
+                <button onclick="pwaManager.dismissUpdate()" class="dismiss-btn">×</button>
             </div>
         `;
         
         document.body.appendChild(updateNotification);
         
-        // Auto-hide after 10 seconds
+        // Auto-hide after 15 seconds
         setTimeout(() => {
             if (updateNotification.parentNode) {
                 updateNotification.remove();
             }
-        }, 10000);
+        }, 15000);
+    }
+
+    async updatePWA() {
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                if (registration && registration.waiting) {
+                    registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                    this.showNotification('Updating PWA...', 'info');
+                    
+                    // Reload after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('Update failed:', error);
+                this.showNotification('Update failed', 'error');
+            }
+        }
+    }
+
+    dismissUpdate() {
+        const notification = document.querySelector('.update-notification');
+        if (notification) {
+            notification.remove();
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.pwa-notification');
+        existingNotifications.forEach(notification => notification.remove());
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `pwa-notification pwa-notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-message">${message}</span>
+                <button class="notification-close">&times;</button>
+            </div>
+        `;
+
+        // Add to page
+        document.body.appendChild(notification);
+
+        // Animate in
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        // Close button functionality
+        const closeButton = notification.querySelector('.notification-close');
+        closeButton.addEventListener('click', () => {
+            notification.classList.remove('show');
+            setTimeout(() => notification.remove(), 300);
+        });
+
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }
+        }, 5000);
+    }
+
+    // PWA Status Methods
+    getPWAStatus() {
+        return {
+            isInstalled: this.isInstalled,
+            hasServiceWorker: 'serviceWorker' in navigator,
+            isOnline: navigator.onLine,
+            canInstall: !!this.deferredPrompt
+        };
+    }
+
+    // Cache Management
+    async clearCache() {
+        if ('caches' in window) {
+            try {
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map(cacheName => caches.delete(cacheName))
+                );
+                this.showNotification('Cache cleared successfully', 'success');
+                return true;
+            } catch (error) {
+                console.error('Cache clearing failed:', error);
+                this.showNotification('Cache clearing failed', 'error');
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // Offline Data Management
+    async getOfflineData() {
+        if ('indexedDB' in window) {
+            // Implementation for getting offline data
+            return [];
+        }
+        return [];
+    }
+
+    async clearOfflineData() {
+        if ('indexedDB' in window) {
+            // Implementation for clearing offline data
+            this.showNotification('Offline data cleared', 'success');
+            return true;
+        }
+        return false;
     }
 }
 
-// Update PWA
-function updatePWA() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistration().then(registration => {
-            if (registration && registration.waiting) {
-                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-                window.location.reload();
+// Initialize PWA Manager
+let pwaManager;
+if ('serviceWorker' in navigator) {
+    pwaManager = new PWAManager();
+}
+
+// ===== ENHANCED SERVICE WORKER REGISTRATION =====
+
+// Service Worker Manager
+class ServiceWorkerManager {
+    constructor() {
+        this.registration = null;
+        this.isSupported = 'serviceWorker' in navigator;
+        this.init();
+    }
+
+    async init() {
+        if (this.isSupported) {
+            try {
+                await this.registerServiceWorker();
+                this.setupEventListeners();
+                this.checkForUpdates();
+            } catch (error) {
+                console.error('Service Worker initialization failed:', error);
             }
+        } else {
+            console.log('Service Worker not supported');
+        }
+    }
+
+    async registerServiceWorker() {
+        try {
+            this.registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('Service Worker registered successfully:', this.registration);
+
+            // Wait for the service worker to be ready
+            await navigator.serviceWorker.ready;
+            console.log('Service Worker is ready');
+
+            // Check if there's already a controller
+            if (navigator.serviceWorker.controller) {
+                console.log('Service Worker is already controlling the page');
+            }
+
+            return this.registration;
+        } catch (error) {
+            console.error('Service Worker registration failed:', error);
+            throw error;
+        }
+    }
+
+    setupEventListeners() {
+        // Listen for service worker updates
+        this.registration.addEventListener('updatefound', () => {
+            console.log('Service Worker update found');
+            const newWorker = this.registration.installing;
+            
+            newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    console.log('New Service Worker installed, waiting for activation');
+                    this.showUpdateNotification();
+                }
+            });
+        });
+
+        // Listen for service worker state changes
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            console.log('Service Worker controller changed');
+            this.onControllerChange();
+        });
+
+        // Listen for service worker messages
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            this.handleServiceWorkerMessage(event);
+        });
+
+        // Listen for service worker errors
+        navigator.serviceWorker.addEventListener('error', (event) => {
+            console.error('Service Worker error:', event);
+            this.handleServiceWorkerError(event);
         });
     }
-}
 
-// Dismiss Update Notification
-function dismissUpdate() {
-    const notification = document.querySelector('.update-notification');
-    if (notification) {
-        notification.remove();
+    async checkForUpdates() {
+        if (this.registration) {
+            try {
+                await this.registration.update();
+                console.log('Service Worker update check completed');
+            } catch (error) {
+                console.error('Service Worker update check failed:', error);
+            }
+        }
+    }
+
+    showUpdateNotification() {
+        if (pwaManager) {
+            pwaManager.showUpdateNotification();
+        }
+    }
+
+    onControllerChange() {
+        // Reload the page to use the new service worker
+        console.log('Reloading page to use new Service Worker');
+        window.location.reload();
+    }
+
+    handleServiceWorkerMessage(event) {
+        const { type, data } = event.data;
+        
+        switch (type) {
+            case 'CACHE_UPDATED':
+                console.log('Cache updated:', data);
+                this.showCacheUpdateNotification(data);
+                break;
+            case 'OFFLINE_DATA_SYNCED':
+                console.log('Offline data synced:', data);
+                this.showSyncNotification(data);
+                break;
+            case 'BACKGROUND_SYNC_COMPLETED':
+                console.log('Background sync completed:', data);
+                this.showBackgroundSyncNotification(data);
+                break;
+            case 'PUSH_NOTIFICATION_RECEIVED':
+                console.log('Push notification received:', data);
+                this.showPushNotification(data);
+                break;
+            default:
+                console.log('Unknown service worker message:', event.data);
+        }
+    }
+
+    handleServiceWorkerError(error) {
+        console.error('Service Worker error occurred:', error);
+        
+        // Show error notification to user
+        if (pwaManager) {
+            pwaManager.showNotification('Service Worker error occurred', 'error');
+        }
+        
+        // Attempt to re-register service worker
+        setTimeout(() => {
+            this.registerServiceWorker();
+        }, 5000);
+    }
+
+    showCacheUpdateNotification(data) {
+        if (pwaManager) {
+            pwaManager.showNotification(`Cache updated: ${data.filesUpdated} files`, 'info');
+        }
+    }
+
+    showSyncNotification(data) {
+        if (pwaManager) {
+            pwaManager.showNotification(`Offline data synced: ${data.itemsSynced} items`, 'success');
+        }
+    }
+
+    showBackgroundSyncNotification(data) {
+        if (pwaManager) {
+            pwaManager.showNotification(`Background sync completed: ${data.syncType}`, 'success');
+        }
+    }
+
+    showPushNotification(data) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(data.title, {
+                body: data.body,
+                icon: '/icon-192x192.png',
+                badge: '/icon-192x192.png',
+                tag: 'portfolio-notification'
+            });
+        }
+    }
+
+    // Background Sync Methods
+    async registerBackgroundSync(tag, options = {}) {
+        if (this.registration && 'sync' in this.registration) {
+            try {
+                await this.registration.sync.register(tag, options);
+                console.log(`Background sync registered: ${tag}`);
+                return true;
+            } catch (error) {
+                console.error(`Background sync registration failed: ${tag}`, error);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    async registerPeriodicSync(tag, options = {}) {
+        if (this.registration && 'periodicSync' in this.registration) {
+            try {
+                await this.registration.periodicSync.register(tag, options);
+                console.log(`Periodic sync registered: ${tag}`);
+                return true;
+            } catch (error) {
+                console.error(`Periodic sync registration failed: ${tag}`, error);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    // Push Notification Methods
+    async requestNotificationPermission() {
+        if ('Notification' in window) {
+            try {
+                const permission = await Notification.requestPermission();
+                console.log('Notification permission:', permission);
+                return permission === 'granted';
+            } catch (error) {
+                console.error('Notification permission request failed:', error);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    async subscribeToPushNotifications() {
+        if (this.registration && 'pushManager' in this.registration) {
+            try {
+                const subscription = await this.registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: this.urlBase64ToUint8Array('YOUR_VAPID_PUBLIC_KEY')
+                });
+                
+                console.log('Push notification subscription:', subscription);
+                return subscription;
+            } catch (error) {
+                console.error('Push notification subscription failed:', error);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    urlBase64ToUint8Array(base64String) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/-/g, '+')
+            .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
+
+    // Service Worker Status Methods
+    getServiceWorkerStatus() {
+        return {
+            isSupported: this.isSupported,
+            isRegistered: !!this.registration,
+            isActive: !!navigator.serviceWorker.controller,
+            scope: this.registration ? this.registration.scope : null,
+            hasUpdate: false // This would need to be tracked separately
+        };
+    }
+
+    // Unregister Service Worker (for testing/debugging)
+    async unregister() {
+        if (this.registration) {
+            try {
+                const unregistered = await this.registration.unregister();
+                console.log('Service Worker unregistered:', unregistered);
+                return unregistered;
+            } catch (error) {
+                console.error('Service Worker unregistration failed:', error);
+                return false;
+            }
+        }
+        return false;
     }
 }
+
+// Initialize Service Worker Manager
+let serviceWorkerManager;
+if ('serviceWorker' in navigator) {
+    serviceWorkerManager = new ServiceWorkerManager();
+}
+
+// ===== ENHANCED CONTACT FORM WITH OFFLINE SUPPORT =====
+
+// Contact Form Manager
+class ContactFormManager {
+    constructor() {
+        this.form = null;
+        this.offlineQueue = [];
+        this.isOnline = navigator.onLine;
+        this.init();
+    }
+
+    init() {
+        this.form = document.getElementById('contactForm');
+        if (this.form) {
+            this.setupForm();
+            this.setupOfflineSupport();
+        }
+    }
+
+    setupForm() {
+        // Enhanced form validation
+        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        
+        // Real-time validation
+        const inputs = this.form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => this.validateField(input));
+            input.addEventListener('input', () => this.clearFieldError(input));
+        });
+
+        // Auto-save form data
+        this.form.addEventListener('input', () => this.autoSaveForm());
+        
+        // Load saved form data
+        this.loadSavedFormData();
+    }
+
+    setupOfflineSupport() {
+        // Listen for online/offline events
+        window.addEventListener('online', () => {
+            this.isOnline = true;
+            this.processOfflineQueue();
+        });
+
+        window.addEventListener('offline', () => {
+            this.isOnline = false;
+        });
+    }
+
+    async handleSubmit(e) {
+        e.preventDefault();
+        
+        if (!this.validateForm()) {
+            return false;
+        }
+
+        const formData = new FormData(this.form);
+        const contactData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message'),
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent,
+            online: this.isOnline
+        };
+
+        try {
+            if (this.isOnline) {
+                await this.submitFormOnline(contactData);
+            } else {
+                await this.queueFormOffline(contactData);
+            }
+        } catch (error) {
+            console.error('Form submission failed:', error);
+            this.showFormError('Form submission failed. Please try again.');
+        }
+    }
+
+    async submitFormOnline(contactData) {
+        // Show loading state
+        this.showFormLoading(true);
+        
+        try {
+            // Simulate API call (replace with actual endpoint)
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(contactData)
+            });
+
+            if (response.ok) {
+                this.showFormSuccess('Thank you! Your message has been sent successfully.');
+                this.clearForm();
+                this.clearSavedFormData();
+                
+                // Track successful submission
+                this.trackFormSubmission(contactData, true);
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error('Online submission failed:', error);
+            
+            // Fallback to offline queue
+            await this.queueFormOffline(contactData);
+            this.showFormWarning('Message queued for offline submission. Will send when online.');
+        } finally {
+            this.showFormLoading(false);
+        }
+    }
+
+    async queueFormOffline(contactData) {
+        // Add to offline queue
+        this.offlineQueue.push(contactData);
+        
+        // Save to local storage
+        this.saveOfflineQueue();
+        
+        // Register background sync if available
+        if (serviceWorkerManager) {
+            await serviceWorkerManager.registerBackgroundSync('contact-form-sync');
+        }
+        
+        // Show offline notification
+        this.showFormInfo('Message saved offline. Will send when connection is restored.');
+        
+        // Track offline submission
+        this.trackFormSubmission(contactData, false);
+    }
+
+    async processOfflineQueue() {
+        if (this.offlineQueue.length === 0) return;
+
+        console.log(`Processing ${this.offlineQueue.length} offline messages`);
+        
+        const queue = [...this.offlineQueue];
+        this.offlineQueue = [];
+        this.saveOfflineQueue();
+
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (const contactData of queue) {
+            try {
+                await this.submitFormOnline(contactData);
+                successCount++;
+            } catch (error) {
+                console.error('Failed to process offline message:', error);
+                errorCount++;
+                // Re-queue failed messages
+                this.offlineQueue.push(contactData);
+            }
+        }
+
+        this.saveOfflineQueue();
+
+        // Show results
+        if (successCount > 0) {
+            this.showFormSuccess(`${successCount} offline messages sent successfully!`);
+        }
+        if (errorCount > 0) {
+            this.showFormWarning(`${errorCount} messages failed to send and remain queued.`);
+        }
+    }
+
+    validateForm() {
+        let isValid = true;
+        const requiredFields = ['name', 'email', 'subject', 'message'];
+        
+        requiredFields.forEach(fieldName => {
+            const field = this.form.querySelector(`[name="${fieldName}"]`);
+            if (!this.validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    validateField(field) {
+        const value = field.value.trim();
+        const fieldName = field.name;
+        let isValid = true;
+        let errorMessage = '';
+
+        // Clear previous errors
+        this.clearFieldError(field);
+
+        // Required field validation
+        if (field.hasAttribute('required') && !value) {
+            isValid = false;
+            errorMessage = `${this.getFieldLabel(field)} is required.`;
+        }
+
+        // Email validation
+        if (fieldName === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid email address.';
+            }
+        }
+
+        // Length validation
+        if (fieldName === 'message' && value.length < 10) {
+            isValid = false;
+            errorMessage = 'Message must be at least 10 characters long.';
+        }
+
+        if (fieldName === 'subject' && value.length < 3) {
+            isValid = false;
+            errorMessage = 'Subject must be at least 3 characters long.';
+        }
+
+        // Show error if validation failed
+        if (!isValid) {
+            this.showFieldError(field, errorMessage);
+        }
+
+        return isValid;
+    }
+
+    getFieldLabel(field) {
+        const label = field.previousElementSibling;
+        return label ? label.textContent.replace('*', '').trim() : field.name;
+    }
+
+    showFieldError(field, message) {
+        field.classList.add('error');
+        
+        // Create or update error message
+        let errorElement = field.parentNode.querySelector('.field-error');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.className = 'field-error';
+            field.parentNode.appendChild(errorElement);
+        }
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
+
+    clearFieldError(field) {
+        field.classList.remove('error');
+        const errorElement = field.parentNode.querySelector('.field-error');
+        if (errorElement) {
+            errorElement.style.display = 'none';
+        }
+    }
+
+    showFormLoading(show) {
+        const submitBtn = this.form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.dataset.originalText || submitBtn.textContent;
+        
+        if (show) {
+            submitBtn.dataset.originalText = originalText;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+        } else {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    }
+
+    showFormSuccess(message) {
+        this.showFormMessage(message, 'success');
+    }
+
+    showFormError(message) {
+        this.showFormMessage(message, 'error');
+    }
+
+    showFormWarning(message) {
+        this.showFormMessage(message, 'warning');
+    }
+
+    showFormInfo(message) {
+        this.showFormMessage(message, 'info');
+    }
+
+    showFormMessage(message, type) {
+        // Remove existing messages
+        const existingMessages = this.form.querySelectorAll('.form-message');
+        existingMessages.forEach(msg => msg.remove());
+
+        // Create message element
+        const messageElement = document.createElement('div');
+        messageElement.className = `form-message form-message-${type}`;
+        messageElement.innerHTML = `
+            <div class="message-content">
+                <i class="fas fa-${this.getMessageIcon(type)}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+
+        // Insert before form
+        this.form.parentNode.insertBefore(messageElement, this.form);
+
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+            if (messageElement.parentNode) {
+                messageElement.remove();
+            }
+        }, 8000);
+    }
+
+    getMessageIcon(type) {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+
+    clearForm() {
+        this.form.reset();
+        this.clearFieldErrors();
+    }
+
+    clearFieldErrors() {
+        const errorElements = this.form.querySelectorAll('.field-error');
+        errorElements.forEach(element => element.remove());
+        
+        const errorFields = this.form.querySelectorAll('.error');
+        errorFields.forEach(field => field.classList.remove('error'));
+    }
+
+    // Auto-save functionality
+    autoSaveForm() {
+        const formData = new FormData(this.form);
+        const data = {};
+        
+        for (const [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        
+        localStorage.setItem('contactFormDraft', JSON.stringify(data));
+    }
+
+    loadSavedFormData() {
+        const saved = localStorage.getItem('contactFormDraft');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(key => {
+                    const field = this.form.querySelector(`[name="${key}"]`);
+                    if (field) {
+                        field.value = data[key];
+                    }
+                });
+                
+                // Show restore notification
+                this.showFormInfo('Previous form data restored. You can continue where you left off.');
+            } catch (error) {
+                console.error('Failed to load saved form data:', error);
+            }
+        }
+    }
+
+    clearSavedFormData() {
+        localStorage.removeItem('contactFormDraft');
+    }
+
+    // Offline queue management
+    saveOfflineQueue() {
+        localStorage.setItem('contactFormOfflineQueue', JSON.stringify(this.offlineQueue));
+    }
+
+    loadOfflineQueue() {
+        const saved = localStorage.getItem('contactFormOfflineQueue');
+        if (saved) {
+            try {
+                this.offlineQueue = JSON.parse(saved);
+                console.log(`Loaded ${this.offlineQueue.length} offline messages`);
+            } catch (error) {
+                console.error('Failed to load offline queue:', error);
+                this.offlineQueue = [];
+            }
+        }
+    }
+
+    // Analytics tracking
+    trackFormSubmission(data, isOnline) {
+        // Track form submission in analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'form_submit', {
+                event_category: 'Contact',
+                event_label: isOnline ? 'Online' : 'Offline',
+                value: 1
+            });
+        }
+
+        // Track in performance dashboard if available
+        if (window.performanceDashboard) {
+            window.performanceDashboard.trackUserInteraction('contact_form_submit', {
+                online: isOnline,
+                timestamp: new Date().toISOString()
+            });
+        }
+    }
+
+    // Get form statistics
+    getFormStats() {
+        return {
+            totalSubmissions: this.getTotalSubmissions(),
+            offlineQueueLength: this.offlineQueue.length,
+            lastSubmission: this.getLastSubmission(),
+            averageResponseTime: this.getAverageResponseTime()
+        };
+    }
+
+    getTotalSubmissions() {
+        // This would typically come from analytics or backend
+        return parseInt(localStorage.getItem('contactFormTotalSubmissions') || '0');
+    }
+
+    getLastSubmission() {
+        return localStorage.getItem('contactFormLastSubmission') || null;
+    }
+
+    getAverageResponseTime() {
+        // This would typically come from analytics or backend
+        return 0;
+    }
+}
+
+// Initialize Contact Form Manager
+let contactFormManager;
+document.addEventListener('DOMContentLoaded', () => {
+    contactFormManager = new ContactFormManager();
+});

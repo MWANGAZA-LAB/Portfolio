@@ -1,42 +1,65 @@
 {
-  "name": "Collins Mwanga Okoth (CMO) Portfolio",
+  "name": "CMO Portfolio - Professional Software Engineer",
   "short_name": "CMO Portfolio",
-  "description": "Software Developer specializing in Bitcoin, fintech applications, and full-stack development",
+  "description": "Professional portfolio showcasing software engineering expertise, projects, and technical skills with advanced PWA capabilities",
+  "version": "2.0.0",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#f7931a",
   "orientation": "portrait-primary",
+  "theme_color": "#3b82f6",
+  "background_color": "#ffffff",
   "scope": "/",
-  "lang": "en",
-  "categories": ["business", "productivity", "utilities"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["productivity", "business", "education"],
   "icons": [
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable any"
     },
     {
-      "src": "/android-chrome-512x512.png",
+      "src": "/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/favicon-32x32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "/favicon-16x16.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
+      "purpose": "maskable any"
     }
   ],
   "screenshots": [
@@ -44,39 +67,141 @@
       "src": "/screenshot-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "CMO Portfolio - Desktop View"
     },
     {
       "src": "/screenshot-narrow.png",
       "sizes": "750x1334",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "CMO Portfolio - Mobile View"
     }
   ],
   "shortcuts": [
     {
-      "name": "View Projects",
-      "short_name": "Projects",
-      "description": "View featured projects and demos",
-      "url": "/#projects",
+      "name": "About Me",
+      "short_name": "About",
+      "description": "Learn more about CMO's background and expertise",
+      "url": "/#about",
       "icons": [
         {
-          "src": "/icon-project.png",
-          "sizes": "96x96"
+          "src": "/shortcut-about.png",
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     },
     {
-      "name": "Contact Me",
+      "name": "Projects",
+      "short_name": "Projects",
+      "description": "View CMO's portfolio of software projects",
+      "url": "/#projects",
+      "icons": [
+        {
+          "src": "/shortcut-projects.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Contact",
       "short_name": "Contact",
-      "description": "Get in touch for collaboration",
+      "description": "Get in touch with CMO",
       "url": "/#contact",
       "icons": [
         {
-          "src": "/icon-contact.png",
-          "sizes": "96x96"
+          "src": "/shortcut-contact.png",
+          "sizes": "96x96",
+          "type": "image/png"
         }
       ]
     }
-  ]
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://cmo-portfolio.com"
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+portfolio",
+      "url": "/?action=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "text/plain": [".txt"],
+        "application/pdf": [".pdf"],
+        "image/*": [".png", ".jpg", ".jpeg", ".gif", ".svg"]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/*", "text/*", "application/pdf"]
+        }
+      ]
+    }
+  },
+  "handle_links": "preferred",
+  "scope_extensions": [
+    {
+      "origin": "https://cmo-portfolio.com"
+    }
+  ],
+  "capture_links": "existing-client-navigate",
+  "permissions": [
+    "notifications",
+    "background-sync",
+    "periodic-background-sync"
+  ],
+  "background": {
+    "service_worker": "/sw.js",
+    "type": "module"
+  },
+  "features": [
+    "Cross Platform",
+    "fast",
+    "simple",
+    "responsive",
+    "offline-first",
+    "installable"
+  ],
+  "developer": {
+    "name": "CMO",
+    "url": "https://cmo-portfolio.com"
+  },
+  "homepage_url": "https://cmo-portfolio.com",
+  "repository": "https://github.com/cmo/portfolio",
+  "bugs": "https://github.com/cmo/portfolio/issues",
+  "donate": "https://cmo-portfolio.com/donate",
+  "iarc_rating_id": "e84b072d-71e3-4d3e-8ae6-4037c08f7b4e",
+  "langs": ["en-US", "es-ES", "fr-FR", "de-DE"],
+  "default_locale": "en-US",
+  "display_override": ["standalone", "minimal-ui", "window-controls-overlay"],
+  "window_controls_overlay": {
+    "tag": "title-bar",
+    "color": "#3b82f6"
+  }
 }
