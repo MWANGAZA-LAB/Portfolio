@@ -807,6 +807,364 @@ section {
     color: #94a3b8;
 }
 
+/* Project Demo Sections */
+.project-demo {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--background-secondary);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.project-demo h4 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.demo-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+.demo-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    background: var(--background);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.demo-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    margin: var(--spacing-xs);
+}
+
+.demo-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.validation-result {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-sm);
+    min-height: 40px;
+}
+
+.validation-result.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.validation-result.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+.bitcoin-price h5 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.price-display {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary-color);
+    padding: var(--spacing-sm);
+    background: var(--background);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+/* Game Demo Styles */
+.game-demo {
+    text-align: center;
+}
+
+.game-canvas {
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius-md);
+    background: var(--background);
+    margin-bottom: var(--spacing-md);
+    box-shadow: var(--shadow-medium);
+}
+
+.game-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.score {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--primary-color);
+    background: var(--background);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.game-instructions {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    background: var(--background);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+/* Grocery Demo Styles */
+.grocery-demo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.grocery-input {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.grocery-list h5 {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+.demo-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: var(--background);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.demo-list li {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.demo-list li:last-child {
+    border-bottom: none;
+}
+
+.demo-list li button {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    cursor: pointer;
+}
+
+.qr-share {
+    text-align: center;
+}
+
+.qr-code {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--background);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* PWA Elements */
+.pwa-install-btn {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    margin-left: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.pwa-install-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.update-notification {
+    position: fixed;
+    top: 80px;
+    right: var(--spacing-lg);
+    background: var(--primary-color);
+    color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-large);
+    z-index: 1001;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.update-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.update-btn {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.update-btn:hover {
+    background: var(--background-secondary);
+}
+
+.dismiss-btn {
+    background: transparent;
+    color: white;
+    border: none;
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: var(--transition-fast);
+}
+
+.dismiss-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* PWA Install Prompt Styling */
+.pwa-install-prompt {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-large);
+    z-index: 1000;
+    max-width: 400px;
+    text-align: center;
+    animation: slideUp 0.3s ease-out;
+}
+
+.pwa-install-prompt h3 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.pwa-install-prompt p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+}
+
+.pwa-install-prompt .prompt-buttons {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+}
+
+.pwa-install-prompt .prompt-buttons button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    border: none;
+}
+
+.pwa-install-prompt .prompt-buttons .install {
+    background: var(--primary-color);
+    color: white;
+}
+
+.pwa-install-prompt .prompt-buttons .install:hover {
+    background: var(--primary-dark);
+}
+
+.pwa-install-prompt .prompt-buttons .dismiss {
+    background: var(--background-secondary);
+    color: var(--text-secondary);
+}
+
+.pwa-install-prompt .prompt-buttons .dismiss:hover {
+    background: var(--border-color);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-menu {
@@ -889,6 +1247,21 @@ section {
 
     .skills-grid {
         grid-template-columns: 1fr;
+    }
+
+    .demo-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .grocery-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+        gap: var(--spacing-sm);
     }
 }
 

@@ -5,6 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collins Mwanga Okoth (CMO) - Software Developer | Bitcoin & Fintech Specialist</title>
     <meta name="description" content="Software Developer specializing in Bitcoin, fintech applications, and full-stack development. Based in Nairobi, Kenya.">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#f7931a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CMO Portfolio">
+    <meta name="msapplication-TileColor" content="#f7931a">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Collins Mwanga Okoth (CMO) - Software Developer">
+    <meta property="og:description" content="Bitcoin & Fintech Specialist based in Nairobi, Kenya">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mwangaza-lab.github.io/Portfolio/">
+    <meta property="og:image" content="https://mwangaza-lab.github.io/Portfolio/og-image.png">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@MWANGAZALAB254">
+    <meta name="twitter:title" content="Collins Mwanga Okoth (CMO) - Software Developer">
+    <meta name="twitter:description" content="Bitcoin & Fintech Specialist based in Nairobi, Kenya">
+    <meta name="twitter:image" content="https://mwangaza-lab.github.io/Portfolio/og-image.png">
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://api.coingecko.com">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -137,42 +172,6 @@
             <h2 class="section-title">Featured Projects</h2>
             <div class="projects-grid">
                 
-                <!-- SnakeSats Educational Game -->
-                <div class="project-card featured">
-                    <div class="project-header">
-                        <div class="project-icon">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <div class="project-status">Featured</div>
-                    </div>
-                    <h3 class="project-title">🐍 SnakeSats - Bitcoin Education Game</h3>
-                    <p class="project-description">
-                        Educational game that teaches Bitcoin investment best practices through classic Snake gameplay. 
-                        Players collect "sats", avoid fiat obstacles, and learn crypto investment lessons.
-                    </p>
-                    <div class="project-features">
-                        <span class="feature">Bitcoin Education</span>
-                        <span class="feature">Classic Snake Game</span>
-                        <span class="feature">Mobile-First Design</span>
-                        <span class="feature">Progressive Difficulty</span>
-                    </div>
-                    <div class="project-tech">
-                        <span class="tech-tag">HTML5 Canvas</span>
-                        <span class="tech-tag">JavaScript ES6+</span>
-                        <span class="tech-tag">Web Audio API</span>
-                        <span class="tech-tag">CSS Grid</span>
-                        <span class="tech-tag">Local Storage</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/MWANGAZA-LAB/snakesats" class="project-link" target="_blank">
-                            <i class="fab fa-github"></i> View Code
-                        </a>
-                        <a href="https://mwangaza-lab.github.io/snakesats" class="project-link" target="_blank">
-                            <i class="fas fa-play"></i> Play Game
-                        </a>
-                    </div>
-                </div>
-
                 <!-- Brenda Cereals E-commerce -->
                 <div class="project-card">
                     <div class="project-header">
@@ -246,10 +245,10 @@
                         </div>
                         <div class="project-status">Utility</div>
                     </div>
-                    <h3 class="project-title">Twiga Scan</h3>
+                    <h3 class="project-title">🦒 Twiga Scan - QR Authentication Platform</h3>
                     <p class="project-description">
                         Bitcoin/Lightning QR & URL authentication platform with support for BOLT11, 
-                        LNURL, Lightning Address, and BIP21 standards.
+                        LNURL, Lightning Address, and BIP21 standards. Features live Bitcoin price tracking.
                     </p>
                     <div class="project-features">
                         <span class="feature">QR Code Scanning</span>
@@ -267,6 +266,77 @@
                         <a href="https://github.com/MWANGAZA-LAB/twiga-scan" class="project-link" target="_blank">
                             <i class="fab fa-github"></i> View Code
                         </a>
+                        <a href="https://mwangaza-lab.github.io/twiga-scan/" class="project-link" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                    </div>
+                    <!-- Live Demo Section -->
+                    <div class="project-demo">
+                        <h4>Try Twiga Scan Live:</h4>
+                        <div class="demo-container">
+                            <div class="qr-demo">
+                                <div class="qr-input">
+                                    <input type="text" id="qrInput" placeholder="Enter Bitcoin/Lightning URL or paste QR code data" class="demo-input">
+                                    <button onclick="validateBitcoinURL()" class="demo-btn">Validate</button>
+                                </div>
+                                <div id="validationResult" class="validation-result"></div>
+                            </div>
+                            <div class="bitcoin-price">
+                                <h5>Live Bitcoin Price</h5>
+                                <div id="btcPrice" class="price-display">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SnakeSats Educational Game -->
+                <div class="project-card featured">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="project-status">Featured</div>
+                    </div>
+                    <h3 class="project-title">🐍 SnakeSats - Bitcoin Education Game</h3>
+                    <p class="project-description">
+                        Educational game that teaches Bitcoin investment best practices through classic Snake gameplay. 
+                        Players collect "sats", avoid fiat obstacles, and learn crypto investment lessons.
+                    </p>
+                    <div class="project-features">
+                        <span class="feature">Bitcoin Education</span>
+                        <span class="feature">Classic Snake Game</span>
+                        <span class="feature">Mobile-First Design</span>
+                        <span class="feature">Progressive Difficulty</span>
+                    </div>
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML5 Canvas</span>
+                        <span class="tech-tag">JavaScript ES6+</span>
+                        <span class="tech-tag">Web Audio API</span>
+                        <span class="tech-tag">CSS Grid</span>
+                        <span class="tech-tag">Local Storage</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/MWANGAZA-LAB/snakesats" class="project-link" target="_blank">
+                            <i class="fab fa-github"></i> View Code
+                        </a>
+                        <a href="https://mwangaza-lab.github.io/snakesats" class="project-link" target="_blank">
+                            <i class="fas fa-play"></i> Play Game
+                        </a>
+                    </div>
+                    <!-- Live Demo Section -->
+                    <div class="project-demo">
+                        <h4>Play SnakeSats Mini Demo:</h4>
+                        <div class="game-demo">
+                            <canvas id="snakeCanvas" width="300" height="300" class="game-canvas"></canvas>
+                            <div class="game-controls">
+                                <div class="score">Score: <span id="gameScore">0</span></div>
+                                <button onclick="startSnakeGame()" class="demo-btn">Start Game</button>
+                                <button onclick="pauseSnakeGame()" class="demo-btn">Pause</button>
+                            </div>
+                            <div class="game-instructions">
+                                <p>Use arrow keys to control the snake. Collect sats (🍊) to grow and earn points!</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -278,7 +348,7 @@
                         </div>
                         <div class="project-status">Collaborative</div>
                     </div>
-                    <h3 class="project-title">My-Grocery</h3>
+                    <h3 class="project-title">📝 My-Grocery - Collaborative App</h3>
                     <p class="project-description">
                         Lightweight collaborative grocery list app with real-time synchronization, 
                         QR code sharing, and cross-device compatibility.
@@ -299,6 +369,24 @@
                         <a href="https://github.com/MWANGAZA-LAB/My-Grocery" class="project-link" target="_blank">
                             <i class="fab fa-github"></i> View Code
                         </a>
+                    </div>
+                    <!-- Live Demo Section -->
+                    <div class="project-demo">
+                        <h4>Try My-Grocery Demo:</h4>
+                        <div class="grocery-demo">
+                            <div class="grocery-input">
+                                <input type="text" id="groceryItem" placeholder="Add grocery item" class="demo-input">
+                                <button onclick="addGroceryItem()" class="demo-btn">Add Item</button>
+                            </div>
+                            <div class="grocery-list">
+                                <h5>Grocery List:</h5>
+                                <ul id="groceryList" class="demo-list"></ul>
+                            </div>
+                            <div class="qr-share">
+                                <button onclick="generateGroceryQR()" class="demo-btn">Generate QR Code</button>
+                                <div id="groceryQR" class="qr-code"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

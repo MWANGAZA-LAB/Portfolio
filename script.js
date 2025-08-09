@@ -355,3 +355,643 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Portfolio loaded successfully! 🚀');
 });
+
+// ===== PROJECT DEMO FUNCTIONALITY =====
+
+// Twiga Scan Demo Functions
+function validateBitcoinURL() {
+    const input = document.getElementById('qrInput').value.trim();
+    const resultDiv = document.getElementById('validationResult');
+    
+    if (!input) {
+        showValidationResult('Please enter a URL or QR data', 'error');
+        return;
+    }
+    
+    // Bitcoin URL patterns
+    const patterns = {
+        bitcoin: /^bitcoin:[13][a-km-zA-HJ-NP-Z1-9]{25,34}/,
+        lightning: /^(lnbc|lnbcrt|lnbc|lnsb|lntb)[a-zA-Z0-9]{1,190}$/,
+        lnurl: /^lnurl[a-zA-Z0-9]{1,190}$/,
+        bip21: /^bitcoin:[13][a-km-zA-HJ-NP-Z1-9]{25,34}\?amount=\d+(\.\d+)?&label=.+/
+    };
+    
+    let isValid = false;
+    let type = '';
+    
+    for (const [key, pattern] of Object.entries(patterns)) {
+        if (pattern.test(input)) {
+            isValid = true;
+            type = key;
+            break;
+        }
+    }
+    
+    if (isValid) {
+        showValidationResult(`✅ Valid ${type} format detected!`, 'success');
+    } else {
+        showValidationResult('❌ Invalid Bitcoin/Lightning format', 'error');
+    }
+}
+
+function showValidationResult(message, type) {
+    const resultDiv = document.getElementById('validationResult');
+    resultDiv.textContent = message;
+    resultDiv.className = `validation-result ${type}`;
+}
+
+// Bitcoin Price Display
+async function updateBitcoinPrice() {
+    try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur,kes');
+        const data = await response.json();
+        const btcPrice = document.getElementById('btcPrice');
+        
+        if (data.bitcoin) {
+            const usd = data.bitcoin.usd;
+            const eur = data.bitcoin.eur;
+            const kes = data.bitcoin.kes || (usd * 100); // Approximate KES rate
+            
+            btcPrice.innerHTML = `
+                <div>$${usd.toLocaleString()}</div>
+                <div style="font-size: 0.8em; color: var(--text-secondary);">
+                    €${eur.toLocaleString()} | KES ${kes.toLocaleString()}
+                </div>
+            `;
+        }
+    } catch (error) {
+        document.getElementById('btcPrice').textContent = 'Price unavailable';
+    }
+}
+
+// SnakeSats Game Demo
+let snakeGame = null;
+let gameInterval = null;
+let gamePaused = false;
+
+function startSnakeGame() {
+    if (gameInterval) return;
+    
+    const canvas = document.getElementById('snakeCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreElement = document.getElementById('gameScore');
+    
+    // Game state
+    snakeGame = {
+        snake: [{x: 150, y: 150}],
+        food: {x: 50, y: 50},
+        direction: 'right',
+        score: 0,
+        gridSize: 10
+    };
+    
+    // Generate food
+    generateFood();
+    
+    // Start game loop
+    gameInterval = setInterval(() => {
+        if (!gamePaused) {
+            updateGame();
+            drawGame(ctx);
+        }
+    }, 150);
+    
+    // Keyboard controls
+    document.addEventListener('keydown', handleGameKeyPress);
+    
+    // Update score
+    scoreElement.textContent = snakeGame.score;
+}
+
+function pauseSnakeGame() {
+    gamePaused = !gamePaused;
+    const pauseBtn = event.target;
+    pauseBtn.textContent = gamePaused ? 'Resume' : 'Pause';
+}
+
+function generateFood() {
+    const canvas = document.getElementById('snakeCanvas');
+    snakeGame.food = {
+        x: Math.floor(Math.random() * (canvas.width / snakeGame.gridSize)) * snakeGame.gridSize,
+        y: Math.floor(Math.random() * (canvas.height / snakeGame.gridSize)) * snakeGame.gridSize
+    };
+}
+
+function updateGame() {
+    const head = {...snakeGame.snake[0]};
+    
+    // Move head
+    switch(snakeGame.direction) {
+        case 'up': head.y -= snakeGame.gridSize; break;
+        case 'down': head.y += snakeGame.gridSize; break;
+        case 'left': head.x -= snakeGame.gridSize; break;
+        case 'right': head.x += snakeGame.gridSize; break;
+    }
+    
+    // Check collision with walls
+    if (head.x < 0 || head.x >= 300 || head.y < 0 || head.y >= 300) {
+        gameOver();
+        return;
+    }
+    
+    // Check collision with self
+    if (snakeGame.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        gameOver();
+        return;
+    }
+    
+    // Add new head
+    snakeGame.snake.unshift(head);
+    
+    // Check if food eaten
+    if (head.x === snakeGame.food.x && head.y === snakeGame.food.y) {
+        snakeGame.score += 10;
+        document.getElementById('gameScore').textContent = snakeGame.score;
+        generateFood();
+    } else {
+        snakeGame.snake.pop();
+    }
+}
+
+function drawGame(ctx) {
+    const canvas = document.getElementById('snakeCanvas');
+    
+    // Clear canvas
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw snake
+    ctx.fillStyle = '#f7931a';
+    snakeGame.snake.forEach((segment, index) => {
+        if (index === 0) {
+            ctx.fillStyle = '#e6850e'; // Head color
+        } else {
+            ctx.fillStyle = '#f7931a'; // Body color
+        }
+        ctx.fillRect(segment.x, segment.y, snakeGame.gridSize - 1, snakeGame.gridSize - 1);
+    });
+    
+    // Draw food (sats)
+    ctx.fillStyle = '#ff6b35';
+    ctx.font = '12px Arial';
+    ctx.fillText('🍊', snakeGame.food.x, snakeGame.food.y + 10);
+}
+
+function handleGameKeyPress(event) {
+    switch(event.key) {
+        case 'ArrowUp':
+            if (snakeGame.direction !== 'down') snakeGame.direction = 'up';
+            break;
+        case 'ArrowDown':
+            if (snakeGame.direction !== 'up') snakeGame.direction = 'down';
+            break;
+        case 'ArrowLeft':
+            if (snakeGame.direction !== 'right') snakeGame.direction = 'left';
+            break;
+        case 'ArrowRight':
+            if (snakeGame.direction !== 'left') snakeGame.direction = 'right';
+            break;
+    }
+}
+
+function gameOver() {
+    clearInterval(gameInterval);
+    gameInterval = null;
+    alert(`Game Over! Final Score: ${snakeGame.score}`);
+    
+    // Reset game
+    snakeGame = null;
+    document.getElementById('gameScore').textContent = '0';
+}
+
+// My-Grocery Demo Functions
+let groceryItems = [];
+
+function addGroceryItem() {
+    const input = document.getElementById('groceryItem');
+    const item = input.value.trim();
+    
+    if (item) {
+        groceryItems.push(item);
+        input.value = '';
+        updateGroceryList();
+    }
+}
+
+function removeGroceryItem(index) {
+    groceryItems.splice(index, 1);
+    updateGroceryList();
+}
+
+function updateGroceryList() {
+    const list = document.getElementById('groceryList');
+    list.innerHTML = '';
+    
+    groceryItems.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${item}</span>
+            <button onclick="removeGroceryItem(${index})">×</button>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function generateGroceryQR() {
+    const qrDiv = document.getElementById('groceryQR');
+    if (groceryItems.length === 0) {
+        qrDiv.innerHTML = '<p>Add items to generate QR code</p>';
+        return;
+    }
+    
+    // Simple QR representation (in real app, use a QR library)
+    const itemsText = groceryItems.join(', ');
+    qrDiv.innerHTML = `
+        <div style="text-align: center;">
+            <div style="font-size: 0.8em; color: var(--text-secondary); margin-bottom: 8px;">
+                Scan to share list
+            </div>
+            <div style="font-family: monospace; font-size: 0.7em; word-break: break-all;">
+                ${itemsText.substring(0, 50)}${itemsText.length > 50 ? '...' : ''}
+            </div>
+        </div>
+    `;
+}
+
+// ===== PERFORMANCE MONITORING & ANALYTICS =====
+
+// Performance Metrics
+function trackPerformance() {
+    if ('performance' in window) {
+        // Navigation Timing API
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const navigation = performance.getEntriesByType('navigation')[0];
+                const paint = performance.getEntriesByType('paint');
+                
+                const metrics = {
+                    pageLoadTime: navigation.loadEventEnd - navigation.loadEventStart,
+                    domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+                    firstPaint: paint.find(p => p.name === 'first-paint')?.startTime || 0,
+                    firstContentfulPaint: paint.find(p => p.name === 'first-contentful-paint')?.startTime || 0
+                };
+                
+                console.log('Performance Metrics:', metrics);
+                
+                // Send to analytics (if configured)
+                if (window.gtag) {
+                    gtag('event', 'performance_metrics', metrics);
+                }
+            }, 0);
+        });
+        
+        // Core Web Vitals
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    console.log(`${entry.name}: ${entry.value}`);
+                    
+                    // Track LCP (Largest Contentful Paint)
+                    if (entry.name === 'largest-contentful-paint') {
+                        if (window.gtag) {
+                            gtag('event', 'largest_contentful_paint', {
+                                value: Math.round(entry.startTime)
+                            });
+                        }
+                    }
+                    
+                    // Track FID (First Input Delay)
+                    if (entry.name === 'first-input') {
+                        if (window.gtag) {
+                            gtag('event', 'first_input_delay', {
+                                value: Math.round(entry.processingStart - entry.startTime)
+                            });
+                        }
+                    }
+                    
+                    // Track CLS (Cumulative Layout Shift)
+                    if (entry.name === 'layout-shift') {
+                        if (window.gtag) {
+                            gtag('event', 'cumulative_layout_shift', {
+                                value: entry.value
+                            });
+                        }
+                    }
+                }
+            });
+            
+            observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+        }
+    }
+}
+
+// Error Tracking
+function trackErrors() {
+    // Global error handler
+    window.addEventListener('error', (event) => {
+        console.error('Global Error:', event.error);
+        
+        const errorData = {
+            message: event.message,
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            error: event.error?.stack || 'No stack trace',
+            userAgent: navigator.userAgent,
+            url: window.location.href,
+            timestamp: new Date().toISOString()
+        };
+        
+        // Send to analytics (if configured)
+        if (window.gtag) {
+            gtag('event', 'exception', {
+                description: errorData.message,
+                fatal: false
+            });
+        }
+        
+        // Log to console for debugging
+        console.error('Error Details:', errorData);
+    });
+    
+    // Unhandled promise rejection handler
+    window.addEventListener('unhandledrejection', (event) => {
+        console.error('Unhandled Promise Rejection:', event.reason);
+        
+        if (window.gtag) {
+            gtag('event', 'exception', {
+                description: 'Unhandled Promise Rejection',
+                fatal: false
+            });
+        }
+    });
+}
+
+// User Interaction Tracking
+function trackUserInteractions() {
+    // Track button clicks
+    document.addEventListener('click', (event) => {
+        if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A') {
+            const element = event.target;
+            const text = element.textContent?.trim() || element.getAttribute('aria-label') || 'Unknown';
+            const href = element.href || 'No URL';
+            
+            if (window.gtag) {
+                gtag('event', 'click', {
+                    element_type: element.tagName.toLowerCase(),
+                    element_text: text,
+                    element_url: href
+                });
+            }
+        }
+    });
+    
+    // Track form submissions
+    document.addEventListener('submit', (event) => {
+        const form = event.target;
+        const formId = form.id || 'Unknown Form';
+        
+        if (window.gtag) {
+            gtag('event', 'form_submit', {
+                form_id: formId,
+                form_action: form.action || 'No Action'
+            });
+        }
+    });
+    
+    // Track scroll depth
+    let maxScrollDepth = 0;
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+        
+        if (scrollPercent > maxScrollDepth) {
+            maxScrollDepth = scrollPercent;
+            
+            // Track at 25%, 50%, 75%, 100%
+            if ([25, 50, 75, 100].includes(maxScrollDepth)) {
+                if (window.gtag) {
+                    gtag('event', 'scroll_depth', {
+                        depth: maxScrollDepth
+                    });
+                }
+            }
+        }
+    });
+}
+
+// Page Visibility Tracking
+function trackPageVisibility() {
+    let hidden, visibilityChange;
+    
+    if (typeof document.hidden !== "undefined") {
+        hidden = "hidden";
+        visibilityChange = "visibilitychange";
+    } else if (typeof document.msHidden !== "undefined") {
+        hidden = "msHidden";
+        visibilityChange = "msvisibilitychange";
+    } else if (typeof document.webkitHidden !== "undefined") {
+        hidden = "webkitHidden";
+        visibilityChange = "webkitvisibilitychange";
+    }
+    
+    document.addEventListener(visibilityChange, () => {
+        if (document[hidden]) {
+            if (window.gtag) {
+                gtag('event', 'page_hide');
+            }
+        } else {
+            if (window.gtag) {
+                gtag('event', 'page_show');
+            }
+        }
+    });
+}
+
+// Initialize all tracking
+function initializeTracking() {
+    trackPerformance();
+    trackErrors();
+    trackUserInteractions();
+    trackPageVisibility();
+}
+
+// Initialize demos when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Initialize Bitcoin price
+    updateBitcoinPrice();
+    setInterval(updateBitcoinPrice, 30000); // Update every 30 seconds
+    
+    // Add demo event listeners
+    const qrInput = document.getElementById('qrInput');
+    if (qrInput) {
+        qrInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                validateBitcoinURL();
+            }
+        });
+    }
+    
+    const groceryInput = document.getElementById('groceryItem');
+    if (groceryInput) {
+        groceryInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addGroceryItem();
+            }
+        });
+    }
+    
+    // Register Service Worker for PWA
+    registerServiceWorker();
+    
+    // Initialize PWA features
+    initializePWA();
+    
+    // Initialize tracking
+    initializeTracking();
+    
+    // Track page view
+    if (window.gtag) {
+        gtag('event', 'page_view', {
+            page_title: document.title,
+            page_location: window.location.href
+        });
+    }
+    
+    console.log('Portfolio loaded successfully! 🚀');
+});
+
+// ===== PWA FUNCTIONALITY =====
+
+// Service Worker Registration
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('SW registered: ', registration);
+                    
+                    // Check for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                showUpdateNotification();
+                            }
+                        });
+                    });
+                })
+                .catch(registrationError => {
+                    console.log('SW registration failed: ', registrationError);
+                });
+        });
+    }
+}
+
+// PWA Installation
+function initializePWA() {
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install button
+        showInstallButton();
+    });
+    
+    // Handle app installed event
+    window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed');
+        hideInstallButton();
+    });
+}
+
+// Show PWA Install Button
+function showInstallButton() {
+    // Create install button if it doesn't exist
+    if (!document.getElementById('pwaInstallBtn')) {
+        const installBtn = document.createElement('button');
+        installBtn.id = 'pwaInstallBtn';
+        installBtn.className = 'pwa-install-btn';
+        installBtn.innerHTML = '<i class="fas fa-download"></i> Install App';
+        installBtn.onclick = installPWA;
+        
+        // Add to navigation
+        const navContainer = document.querySelector('.nav-container');
+        if (navContainer) {
+            navContainer.appendChild(installBtn);
+        }
+    }
+}
+
+// Hide PWA Install Button
+function hideInstallButton() {
+    const installBtn = document.getElementById('pwaInstallBtn');
+    if (installBtn) {
+        installBtn.remove();
+    }
+}
+
+// Install PWA
+function installPWA() {
+    if (window.deferredPrompt) {
+        window.deferredPrompt.prompt();
+        window.deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            window.deferredPrompt = null;
+            hideInstallButton();
+        });
+    }
+}
+
+// Show Update Notification
+function showUpdateNotification() {
+    if ('serviceWorker' in navigator) {
+        const updateNotification = document.createElement('div');
+        updateNotification.className = 'update-notification';
+        updateNotification.innerHTML = `
+            <div class="update-content">
+                <span>New version available!</span>
+                <button onclick="updatePWA()" class="update-btn">Update</button>
+                <button onclick="dismissUpdate()" class="dismiss-btn">×</button>
+            </div>
+        `;
+        
+        document.body.appendChild(updateNotification);
+        
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+            if (updateNotification.parentNode) {
+                updateNotification.remove();
+            }
+        }, 10000);
+    }
+}
+
+// Update PWA
+function updatePWA() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+            if (registration && registration.waiting) {
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                window.location.reload();
+            }
+        });
+    }
+}
+
+// Dismiss Update Notification
+function dismissUpdate() {
+    const notification = document.querySelector('.update-notification');
+    if (notification) {
+        notification.remove();
+    }
+}
