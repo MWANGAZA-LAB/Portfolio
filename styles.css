@@ -99,6 +99,12 @@
     --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7);
     
     /* Dark Theme Status Colors */
+    --success-light: #064e3b;
+    --warning-light: #451a03;
+    --error-light: #450a0a;
+    --info-light: #1e3a8a;
+    
+    /* Dark Theme Status Colors */
     --success-color: #22c55e;
     --success-light: #064e3b;
     --warning-color: #fbbf24;
@@ -402,7 +408,8 @@ body {
 
 .hero-stats {
     display: flex;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-2xl);
+    margin-top: var(--spacing-2xl);
 }
 
 .stat {
@@ -410,14 +417,25 @@ body {
 }
 
 .stat-number {
-    display: block;
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-3xl);
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--text-primary);
+    display: block;
 }
 
 .stat-label {
+    color: var(--text-secondary);
     font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Dark mode styles for hero stats */
+[data-theme="dark"] .stat-number {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .stat-label {
     color: var(--text-secondary);
 }
 
@@ -469,6 +487,17 @@ body {
     50% { transform: translateY(-20px); }
 }
 
+/* Dark mode styles for floating cards */
+[data-theme="dark"] .floating-card {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .floating-card i {
+    color: var(--primary-color);
+}
+
 /* Section Styles */
 section {
     padding: var(--spacing-3xl) 0;
@@ -492,6 +521,19 @@ section {
     height: 4px;
     background: var(--primary-color);
     border-radius: 2px;
+}
+
+/* Dark mode styles for section titles */
+[data-theme="dark"] .section-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .section-subtitle {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .section-description {
+    color: var(--text-light);
 }
 
 /* About Section */
@@ -565,6 +607,55 @@ section {
     margin: 0;
 }
 
+/* Dark mode styles for about section */
+[data-theme="dark"] .about {
+    background: var(--background);
+}
+
+[data-theme="dark"] .about-content {
+    background: var(--background-secondary);
+}
+
+[data-theme="dark"] .about-intro {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .about-text p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .highlight {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .highlight h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .highlight p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .location-card {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .location-card h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .location-card p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .timezone {
+    color: var(--text-light);
+}
+
 .timezone {
     font-size: var(--font-size-sm);
     color: var(--text-light);
@@ -624,6 +715,33 @@ section {
 [data-theme="dark"] .project-card.featured {
     background: linear-gradient(135deg, var(--background-tertiary) 0%, var(--background-secondary) 100%);
     border-color: var(--primary-color);
+}
+
+/* Dark mode styles for project elements */
+[data-theme="dark"] .project-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .project-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .feature {
+    background: var(--background-tertiary);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .tech-tag {
+    background: var(--primary-color);
+    color: white;
+}
+
+[data-theme="dark"] .project-link {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .project-link:hover {
+    color: var(--primary-color);
 }
 
 .project-header {
@@ -737,6 +855,16 @@ section {
     background: var(--text-light);
 }
 
+/* Dark mode styles for more projects */
+[data-theme="dark"] .more-projects {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .more-projects .project-icon {
+    background: var(--text-light);
+}
+
 /* Skills Section */
 .skills {
     background: var(--background-secondary);
@@ -793,6 +921,34 @@ section {
     transition: width 1s ease-in-out;
 }
 
+/* Dark mode styles for skills section */
+[data-theme="dark"] .skill-category {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .skill-category:hover {
+    box-shadow: var(--shadow-large);
+    transform: translateY(-2px);
+}
+
+[data-theme="dark"] .category-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .skill-name {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .skill-bar {
+    background: var(--background-tertiary);
+}
+
+[data-theme="dark"] .skill-progress {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
 /* Contact Section */
 .contact-content {
     display: grid;
@@ -808,8 +964,17 @@ section {
 
 .contact-info p {
     color: var(--text-secondary);
-    margin-bottom: var(--spacing-xl);
-    line-height: 1.7;
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.6;
+}
+
+/* Dark mode styles for contact info */
+[data-theme="dark"] .contact-info h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .contact-info p {
+    color: var(--text-secondary);
 }
 
 .contact-methods {
@@ -825,6 +990,20 @@ section {
     padding: var(--spacing-lg);
     background: var(--background-secondary);
     border-radius: var(--border-radius-lg);
+}
+
+/* Dark mode styles for contact methods */
+[data-theme="dark"] .contact-method {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .contact-method h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .contact-method p {
+    color: var(--text-secondary);
 }
 
 .contact-method i {
@@ -855,6 +1034,17 @@ section {
     box-shadow: var(--shadow-medium);
 }
 
+/* Dark mode styles for contact form */
+[data-theme="dark"] .contact-form {
+    background: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .contact-form h3 {
+    color: var(--text-primary);
+}
+
 .form-group {
     margin-bottom: var(--spacing-lg);
 }
@@ -864,6 +1054,11 @@ section {
     margin-bottom: var(--spacing-sm);
     font-weight: 500;
     color: var(--text-primary);
+}
+
+.form-group label.required::after {
+    content: ' *';
+    color: var(--error-color);
 }
 
 .form-group input,
@@ -932,6 +1127,40 @@ section {
     padding-top: var(--spacing-xl);
     border-top: 1px solid #334155;
     color: #94a3b8;
+}
+
+/* Dark mode styles for footer */
+[data-theme="dark"] .footer {
+    background: var(--background-dark);
+    border-top: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .footer-content {
+    background: var(--background-dark);
+}
+
+[data-theme="dark"] .footer-logo .logo-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="dark"] .footer-left p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .footer-links a {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .footer-links a:hover {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .footer-bottom {
+    border-color: var(--border-color);
+    color: var(--text-light);
 }
 
 
@@ -2385,8 +2614,74 @@ section {
 }
 
 [data-theme="dark"] .offline-queue-status {
-    background: var(--background);
-    border-color: var(--info-color);
+    background: var(--background-tertiary);
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for form elements */
+[data-theme="dark"] .field-error {
+    background: var(--error-light);
+    color: var(--text-primary);
+    border-color: var(--error-color);
+}
+
+[data-theme="dark"] .form-message {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .message-content {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .offline-indicator {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .auto-save-indicator {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for PWA elements */
+[data-theme="dark"] .welcome-message {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .welcome-content h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .welcome-content p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .welcome-features .feature {
+    background: var(--background-tertiary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .welcome-features .feature span {
+    color: var(--text-secondary);
+}
+
+/* Dark mode styles for performance dashboard elements */
+[data-theme="dark"] .dashboard-header h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .metric-group h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .metric-item span:first-child {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .metric-value {
+    color: var(--text-primary);
 }
 
 /* Accessibility Enhancements */
@@ -2437,4 +2732,318 @@ section {
     .form-message {
         animation: none;
     }
+}
+
+[data-theme="dark"] .metric-value {
+    color: var(--text-primary);
+}
+
+/* Dark mode styles for error elements */
+[data-theme="dark"] .error-item {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .error-time {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .error-message {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .no-errors {
+    color: var(--text-light);
+}
+
+/* Dark mode styles for PWA install prompt */
+[data-theme="dark"] .pwa-install-prompt {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .pwa-install-prompt h3 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .pwa-install-prompt p {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .pwa-install-prompt .prompt-buttons button {
+    background: var(--background-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .pwa-install-prompt .prompt-buttons button:hover {
+    background: var(--background-tertiary);
+    border-color: var(--primary-color);
+}
+
+/* Dark mode styles for status and progress elements */
+[data-theme="dark"] #online-status {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .progress-bar {
+    background: var(--background-tertiary);
+}
+
+[data-theme="dark"] .progress-fill {
+    background: var(--primary-color);
+}
+
+/* Dark mode styles for form stats elements */
+[data-theme="dark"] .stat-item {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .stat-value {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .stat-label {
+    color: var(--text-secondary);
+}
+
+/* Dark mode styles for buttons */
+[data-theme="dark"] .btn {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background: var(--primary-color);
+    box-shadow: var(--shadow-large);
+}
+
+[data-theme="dark"] .btn-secondary {
+    background: var(--background-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: var(--background-tertiary);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: var(--background-tertiary);
+    border-color: var(--primary-color);
+}
+
+/* Dark mode styles for navigation elements */
+[data-theme="dark"] .nav-logo .logo-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+[data-theme="dark"] .nav-link {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-link:hover {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .nav-link::after {
+    background: var(--primary-color);
+}
+
+[data-theme="dark"] .hamburger .bar {
+    background: var(--text-primary);
+}
+
+/* Dark mode styles for hero elements */
+[data-theme="dark"] .hero-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .hero-description {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .gradient-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Dark mode styles for project header elements */
+[data-theme="dark"] .project-header {
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .project-icon {
+    background: var(--primary-color);
+    color: white;
+}
+
+[data-theme="dark"] .project-status {
+    background: var(--accent-color);
+    color: white;
+}
+
+[data-theme="dark"] .project-status.production {
+    background: #10b981;
+    color: white;
+}
+
+/* Dark mode styles for contact method elements */
+[data-theme="dark"] .contact-method i {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .contact-method a {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .contact-method a:hover {
+    color: var(--primary-color);
+}
+
+/* Dark mode styles for highlight and location card icons */
+[data-theme="dark"] .highlight i {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .location-card i {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .category-title i {
+    color: var(--primary-color);
+}
+
+/* Dark mode styles for section title after element */
+[data-theme="dark"] .section-title::after {
+    background: var(--primary-color);
+}
+
+/* Dark mode styles for floating card nth-child elements */
+[data-theme="dark"] .floating-card:nth-child(1) {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .floating-card:nth-child(2) {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .floating-card:nth-child(3) {
+    background: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for hero image and buttons */
+[data-theme="dark"] .hero-image {
+    filter: brightness(0.9) contrast(1.1);
+}
+
+[data-theme="dark"] .hero-buttons {
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for grid and layout elements */
+[data-theme="dark"] .about-highlights {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .projects-grid {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .skills-grid {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .contact-methods {
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for contact content */
+[data-theme="dark"] .contact-content {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .contact-content > * {
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for container and nav container */
+[data-theme="dark"] .container {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .nav-container {
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for hero container */
+[data-theme="dark"] .hero-container {
+    border-color: var(--border-color);
+}
+
+/* Dark mode styles for skills section */
+[data-theme="dark"] .skills {
+    background: var(--background);
+}
+
+/* Dark mode styles for PWA install button */
+[data-theme="dark"] .pwa-install-btn {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: var(--shadow-medium);
+}
+
+[data-theme="dark"] .pwa-install-btn:hover {
+    background: var(--accent-dark);
+    box-shadow: var(--shadow-large);
+}
+
+[data-theme="dark"] .pwa-install-btn:disabled {
+    background: var(--background-tertiary);
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .pwa-install-btn:disabled:hover {
+    background: var(--background-tertiary);
+    transform: none;
+    box-shadow: var(--shadow-light);
+}
+
+/* Dark mode styles for update notification */
+[data-theme="dark"] .update-notification {
+    background: var(--primary-color);
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow-xl);
+}
+
+[data-theme="dark"] .update-btn {
+    background: var(--background-secondary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .update-btn:hover {
+    background: var(--background-tertiary);
+}
+
+[data-theme="dark"] .dismiss-btn {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .dismiss-btn:hover {
+    color: var(--text-primary);
 }

@@ -336,8 +336,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
     
-    // Load saved theme or default to light
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    // Load saved theme or default to dark
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     html.setAttribute('data-theme', savedTheme);
     
     // Update toggle button icon based on current theme
