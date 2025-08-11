@@ -457,6 +457,7 @@ body {
     gap: var(--spacing-sm);
     font-weight: 600;
     animation: float 6s ease-in-out infinite;
+    color: var(--text-primary);
 }
 
 .floating-card:nth-child(1) {
@@ -496,6 +497,10 @@ body {
 
 [data-theme="dark"] .floating-card i {
     color: var(--primary-color);
+}
+
+[data-theme="dark"] .floating-card span {
+    color: var(--text-primary);
 }
 
 /* Section Styles */
@@ -2945,6 +2950,13 @@ section {
 [data-theme="dark"] .floating-card:nth-child(3) {
     background: var(--background-secondary);
     border-color: var(--border-color);
+}
+
+/* Ensure text color is set for all floating card children in dark mode */
+[data-theme="dark"] .floating-card:nth-child(1) span,
+[data-theme="dark"] .floating-card:nth-child(2) span,
+[data-theme="dark"] .floating-card:nth-child(3) span {
+    color: var(--text-primary);
 }
 
 /* Dark mode styles for hero image and buttons */
