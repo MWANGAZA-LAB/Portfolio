@@ -51,6 +51,62 @@ cd Portfolio
 2. Click the install button or use browser prompt
 3. Enjoy the native app experience!
 
+## 📧 **Contact Form Email Setup**
+The contact form is configured to send emails directly to **mwanga02717@gmail.com** using EmailJS. To complete the setup:
+
+### **Step 1: Create EmailJS Account**
+1. Go to [EmailJS.com](https://www.emailjs.com/) and sign up
+2. Verify your email address
+
+### **Step 2: Create Email Service**
+1. In EmailJS dashboard, go to **Email Services**
+2. Click **Add New Service**
+3. Choose **Gmail** (or your preferred email provider)
+4. Connect your **mwanga02717@gmail.com** account
+5. Copy the **Service ID** (e.g., `service_abc123`)
+
+### **Step 3: Create Email Template**
+1. Go to **Email Templates**
+2. Click **Create New Template**
+3. Use this template structure:
+   ```
+   To: {{to_email}}
+   From: {{from_name}} ({{from_email}})
+   Subject: Portfolio Contact: {{subject}}
+   
+   Message:
+   {{message}}
+   
+   Timestamp: {{timestamp}}
+   ```
+4. Copy the **Template ID** (e.g., `template_xyz789`)
+
+### **Step 4: Get User ID**
+1. Go to **Account** → **API Keys**
+2. Copy your **Public Key** (e.g., `user_def456`)
+
+### **Step 5: Update Configuration**
+In `script.js`, update the `emailjsConfig` object:
+```javascript
+this.emailjsConfig = {
+    serviceId: 'service_abc123',     // Your actual service ID
+    templateId: 'template_xyz789',   // Your actual template ID
+    userId: 'user_def456',          // Your actual user ID
+    recipientEmail: 'mwanga02717@gmail.com'
+};
+```
+
+### **Step 6: Test the Form**
+1. Fill out the contact form
+2. Submit and check your email
+3. Check browser console for EmailJS status
+
+### **Troubleshooting**
+- **"EmailJS not configured"**: Update the configuration in `script.js` with your actual credentials
+- **"Message queued for offline submission"**: Check EmailJS configuration and internet connection
+- **Console errors**: Ensure EmailJS CDN is loaded and credentials are correct
+- **Gmail connection issues**: Enable "Less secure app access" or use App Passwords
+
 ## 🏆 **Expertise & Achievements**
 - **9+ Projects** completed and deployed
 - **5+ Technologies** mastered across the stack

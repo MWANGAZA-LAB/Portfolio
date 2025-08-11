@@ -1477,7 +1477,50 @@ class ContactFormManager {
         this.form = null;
         this.offlineQueue = [];
         this.isOnline = navigator.onLine;
+        
+        // EmailJS Configuration
+        this.emailjsConfig = {
+            serviceId: 'service_xxxxxxx', // You'll need to replace this with your actual EmailJS service ID
+            templateId: 'template_xxxxxxx', // You'll need to replace this with your actual EmailJS template ID
+            userId: 'user_xxxxxxx', // You'll need to replace this with your actual EmailJS user ID
+            recipientEmail: 'mwanga02717@gmail.com' // Your email address
+        };
+        
         this.init();
+    }
+
+    initEmailJS() {
+        // Initialize EmailJS with your user ID
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init(this.emailjsConfig.userId);
+            console.log('EmailJS initialized successfully');
+            
+            // Test EmailJS connection
+            this.testEmailJSConnection();
+        } else {
+            console.warn('EmailJS not loaded. Contact form will use offline mode.');
+        }
+    }
+
+    async testEmailJSConnection() {
+        try {
+            // Test if EmailJS is properly configured
+            console.log('EmailJS Configuration:', {
+                serviceId: this.emailjsConfig.serviceId,
+                templateId: this.emailjsConfig.templateId,
+                userId: this.emailjsConfig.userId,
+                recipientEmail: this.emailjsConfig.recipientEmail
+            });
+            
+            // Check if EmailJS is ready
+            if (emailjs.isReady()) {
+                console.log('✅ EmailJS is ready and configured');
+            } else {
+                console.warn('⚠️ EmailJS is not ready yet');
+            }
+        } catch (error) {
+            console.error('❌ EmailJS connection test failed:', error);
+        }
     }
 
     init() {
@@ -1553,27 +1596,47 @@ class ContactFormManager {
         this.showFormLoading(true);
         
         try {
-            // Simulate API call (replace with actual endpoint)
-            const response = await fetch('/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(contactData)
-            });
+            // Use EmailJS to send email
+            if (typeof emailjs !== 'undefined') {
+                // Check if EmailJS is properly configured
+                if (this.emailjsConfig.serviceId === 'service_xxxxxxx' || 
+                    this.emailjsConfig.templateId === 'template_xxxxxxx' || 
+                    this.emailjsConfig.userId === 'user_xxxxxxx') {
+                    throw new Error('EmailJS not configured. Please update the configuration with your actual EmailJS credentials.');
+                }
 
-            if (response.ok) {
-                this.showFormSuccess('Thank you! Your message has been sent successfully.');
-                this.clearForm();
-                this.clearSavedFormData();
-                
-                // Track successful submission
-                this.trackFormSubmission(contactData, true);
+                const templateParams = {
+                    to_email: this.emailjsConfig.recipientEmail,
+                    from_name: contactData.name,
+                    from_email: contactData.email,
+                    subject: contactData.subject,
+                    message: contactData.message,
+                    timestamp: contactData.timestamp
+                };
+
+                console.log('Sending email via EmailJS with params:', templateParams);
+
+                const response = await emailjs.send(
+                    this.emailjsConfig.serviceId,
+                    this.emailjsConfig.templateId,
+                    templateParams
+                );
+
+                if (response.status === 200) {
+                    this.showFormSuccess('Thank you! Your message has been sent successfully to mwanga02717@gmail.com.');
+                    this.clearForm();
+                    this.clearSavedFormData();
+                    
+                    // Track successful submission
+                    this.trackFormSubmission(contactData, true);
+                } else {
+                    throw new Error(`EmailJS Error: ${response.status}`);
+                }
             } else {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                throw new Error('EmailJS not available');
             }
         } catch (error) {
-            console.error('Online submission failed:', error);
+            console.error('Email submission failed:', error);
             
             // Fallback to offline queue
             await this.queueFormOffline(contactData);
