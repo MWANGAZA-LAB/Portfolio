@@ -1480,9 +1480,9 @@ class ContactFormManager {
         
         // EmailJS Configuration
         this.emailjsConfig = {
-            serviceId: 'service_xxxxxxx', // You'll need to replace this with your actual EmailJS service ID
-            templateId: 'template_xxxxxxx', // You'll need to replace this with your actual EmailJS template ID
-            userId: 'user_xxxxxxx', // You'll need to replace this with your actual EmailJS user ID
+            serviceId: 'service_8qxxxxx', // Test service ID - replace with your actual EmailJS service ID
+            templateId: 'template_xxxxxx', // Test template ID - replace with your actual EmailJS template ID
+            userId: 'user_xxxxxx', // Test user ID - replace with your actual EmailJS user ID
             recipientEmail: 'mwanga02717@gmail.com' // Your email address
         };
         
@@ -1492,34 +1492,150 @@ class ContactFormManager {
     initEmailJS() {
         // Initialize EmailJS with your user ID
         if (typeof emailjs !== 'undefined') {
-            emailjs.init(this.emailjsConfig.userId);
-            console.log('EmailJS initialized successfully');
-            
-            // Test EmailJS connection
-            this.testEmailJSConnection();
+            try {
+                emailjs.init(this.emailjsConfig.userId);
+                console.log('✅ EmailJS initialized successfully');
+                
+                // Test EmailJS connection
+                setTimeout(() => {
+                    this.testEmailJSConnection();
+                    this.logEmailServiceStatus();
+                }, 1000); // Wait a bit for EmailJS to fully initialize
+            } catch (error) {
+                console.error('❌ EmailJS initialization failed:', error);
+            }
         } else {
-            console.warn('EmailJS not loaded. Contact form will use offline mode.');
+            console.warn('⚠️ EmailJS not loaded. Contact form will use offline mode.');
         }
     }
 
     async testEmailJSConnection() {
         try {
             // Test if EmailJS is properly configured
-            console.log('EmailJS Configuration:', {
-                serviceId: this.emailjsConfig.serviceId,
-                templateId: this.emailjsConfig.templateId,
-                userId: this.emailjsConfig.userId,
-                recipientEmail: this.emailjsConfig.recipientEmail
-            });
+            console.log('🔍 EmailJS Configuration Test:');
+            console.log('📧 Service ID:', this.emailjsConfig.serviceId);
+            console.log('📝 Template ID:', this.emailjsConfig.templateId);
+            console.log('👤 User ID:', this.emailjsConfig.userId);
+            console.log('📬 Recipient Email:', this.emailjsConfig.recipientEmail);
+            
+            // Check if EmailJS is loaded
+            if (typeof emailjs === 'undefined') {
+                throw new Error('EmailJS library not loaded');
+            }
             
             // Check if EmailJS is ready
             if (emailjs.isReady()) {
                 console.log('✅ EmailJS is ready and configured');
+                return true;
             } else {
                 console.warn('⚠️ EmailJS is not ready yet');
+                return false;
             }
         } catch (error) {
             console.error('❌ EmailJS connection test failed:', error);
+            return false;
+        }
+    }
+
+    async testEmailService() {
+        console.log('🧪 Testing Email Service...');
+        
+        try {
+            // Test configuration
+            const configValid = await this.testEmailJSConnection();
+            if (!configValid) {
+                throw new Error('EmailJS configuration is invalid');
+            }
+
+            // Test with sample data
+            const testData = {
+                name: 'Test User',
+                email: 'test@example.com',
+                subject: 'Portfolio Contact Form Test',
+                message: 'This is a test message to verify the email service is working correctly.',
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('📤 Sending test email...');
+            
+            const templateParams = {
+                to_email: this.emailjsConfig.recipientEmail,
+                from_name: testData.name,
+                from_email: testData.email,
+                subject: testData.subject,
+                message: testData.message,
+                timestamp: testData.timestamp
+            };
+
+            const response = await emailjs.send(
+                this.emailjsConfig.serviceId,
+                this.emailjsConfig.templateId,
+                templateParams
+            );
+
+            if (response.status === 200) {
+                console.log('✅ Test email sent successfully!');
+                console.log('📧 Check your email at:', this.emailjsConfig.recipientEmail);
+                return true;
+            } else {
+                throw new Error(`EmailJS returned status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('❌ Email service test failed:', error);
+            this.showEmailServiceError(error);
+            return false;
+        }
+    }
+
+    showEmailServiceError(error) {
+        const errorMessage = `Email service error: ${error.message}`;
+        console.error(errorMessage);
+        
+        // Show user-friendly error message
+        this.showFormError(`Email service temporarily unavailable. Please try again later or contact me directly at ${this.emailjsConfig.recipientEmail}`);
+    }
+
+    getEmailServiceStatus() {
+        const status = {
+            emailjsLoaded: typeof emailjs !== 'undefined',
+            emailjsReady: false,
+            configurationValid: false,
+            serviceId: this.emailjsConfig.serviceId,
+            templateId: this.emailjsConfig.templateId,
+            userId: this.emailjsConfig.userId,
+            recipientEmail: this.emailjsConfig.recipientEmail
+        };
+
+        if (status.emailjsLoaded) {
+            try {
+                status.emailjsReady = emailjs.isReady();
+                status.configurationValid = !(
+                    this.emailjsConfig.serviceId.includes('xxxxx') ||
+                    this.emailjsConfig.templateId.includes('xxxxx') ||
+                    this.emailjsConfig.userId.includes('xxxxx')
+                );
+            } catch (error) {
+                console.error('Error checking EmailJS status:', error);
+            }
+        }
+
+        return status;
+    }
+
+    logEmailServiceStatus() {
+        const status = this.getEmailServiceStatus();
+        console.log('📊 Email Service Status:');
+        console.log('📚 EmailJS Library:', status.emailjsLoaded ? '✅ Loaded' : '❌ Not Loaded');
+        console.log('⚡ EmailJS Ready:', status.emailjsReady ? '✅ Ready' : '❌ Not Ready');
+        console.log('🔧 Configuration:', status.configurationValid ? '✅ Valid' : '❌ Invalid (using placeholders)');
+        console.log('📧 Service ID:', status.serviceId);
+        console.log('📝 Template ID:', status.templateId);
+        console.log('👤 User ID:', status.userId);
+        console.log('📬 Recipient:', status.recipientEmail);
+        
+        if (!status.configurationValid) {
+            console.warn('⚠️ You need to update the EmailJS configuration with your actual credentials!');
+            console.warn('📖 See README.md for setup instructions.');
         }
     }
 
@@ -1534,6 +1650,12 @@ class ContactFormManager {
     setupForm() {
         // Enhanced form validation
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        
+        // Test email service button
+        const testBtn = document.getElementById('testEmailBtn');
+        if (testBtn) {
+            testBtn.addEventListener('click', () => this.testEmailService());
+        }
         
         // Real-time validation
         const inputs = this.form.querySelectorAll('input, textarea, select');
@@ -1967,3 +2089,40 @@ let contactFormManager;
 document.addEventListener('DOMContentLoaded', () => {
     contactFormManager = new ContactFormManager();
 });
+
+// Global test function for email service (can be called from browser console)
+window.testPortfolioEmailService = function() {
+    console.log('🧪 Portfolio Email Service Test Suite');
+    console.log('=====================================');
+    
+    if (window.contactFormManager) {
+        console.log('📋 Contact Form Manager found');
+        contactFormManager.logEmailServiceStatus();
+        
+        // Test the email service
+        contactFormManager.testEmailService().then(success => {
+            if (success) {
+                console.log('🎉 Email service test completed successfully!');
+            } else {
+                console.log('❌ Email service test failed. Check console for details.');
+            }
+        });
+    } else {
+        console.error('❌ Contact Form Manager not found. Page may not be fully loaded.');
+    }
+    
+    console.log('💡 Use this function anytime to test the email service');
+    console.log('🔧 Check the README.md for EmailJS setup instructions');
+};
+
+// Auto-test email service when page loads (for development)
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            console.log('🏠 Local development detected - auto-testing email service...');
+            if (window.testPortfolioEmailService) {
+                window.testPortfolioEmailService();
+            }
+        }, 3000);
+    });
+}
