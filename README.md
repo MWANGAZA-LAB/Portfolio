@@ -7,7 +7,7 @@
 [![Performance](https://img.shields.io/badge/Performance-Optimized-orange.svg)](https://web.dev/performance/)
 
 ## **Live Portfolio**
-**[View My Portfolio →]([https://cmo-portfolio.com](https://mwangaza-lab.github.io/Portfolio/))**
+**[View My Portfolio →]((https://mwangaza-lab.github.io/Portfolio/))**
 
 ## **About Me**
 I'm a **Software Developer** passionate about creating modern, performant web applications. I specialize in Progressive Web Apps (PWA), frontend development, and building user-centric digital experiences.
