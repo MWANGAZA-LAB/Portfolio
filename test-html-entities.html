@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Entities Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .result { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>HTML Entities Decoding Test</h1>
+    
+    <div class="test-section">
+        <h3>Original HTML with Entities</h3>
+        <div class="result">
+            <strong>HTML:</strong> Bitcoin &amp; Fintech Specialist
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Decoded Text (Should show & instead of &amp;)</h3>
+        <div class="result" id="decodedResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Typewriter Effect Test</h3>
+        <div class="result" id="typewriterResult"></div>
+        <button onclick="startTypewriter()">Start Typewriter</button>
+    </div>
+
+    <script>
+        // Test HTML entity decoding
+        function decodeHtmlEntities(text) {
+            return text.replace(/&amp;/g, '&')
+                      .replace(/&lt;/g, '<')
+                      .replace(/&gt;/g, '>')
+                      .replace(/&quot;/g, '"')
+                      .replace(/&#39;/g, "'");
+        }
+
+        // Display decoded text
+        const originalText = 'Bitcoin &amp; Fintech Specialist';
+        const decodedText = decodeHtmlEntities(originalText);
+        
+        document.getElementById('decodedResult').innerHTML = `
+            <strong>Decoded:</strong> ${decodedText}
+        `;
+
+        // Typewriter effect test
+        function startTypewriter() {
+            const element = document.getElementById('typewriterResult');
+            const text = 'Bitcoin &amp; Fintech Specialist';
+            
+            // Decode HTML entities first
+            const decodedText = decodeHtmlEntities(text);
+            
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < decodedText.length) {
+                    element.innerHTML += decodedText.charAt(i);
+                    i++;
+                    setTimeout(type, 100);
+                }
+            }
+            
+            type();
+        }
+    </script>
+</body>
+</html>

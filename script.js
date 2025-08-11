@@ -237,9 +237,12 @@ document.addEventListener('DOMContentLoaded', function() {
         let i = 0;
         element.innerHTML = '';
         
+        // Decode HTML entities (like &amp; to &)
+        const decodedText = text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        
         function type() {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
+            if (i < decodedText.length) {
+                element.innerHTML += decodedText.charAt(i);
                 i++;
                 setTimeout(type, speed);
             }
