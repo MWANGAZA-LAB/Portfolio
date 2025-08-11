@@ -1480,9 +1480,9 @@ class ContactFormManager {
         
         // EmailJS Configuration
         this.emailjsConfig = {
-            serviceId: 'service_8qxxxxx', // Test service ID - replace with your actual EmailJS service ID
-            templateId: 'template_xxxxxx', // Test template ID - replace with your actual EmailJS template ID
-            userId: 'user_xxxxxx', // Test user ID - replace with your actual EmailJS user ID
+            serviceId: 'service_g7phy0j', // Your actual EmailJS service ID
+            templateId: 'template_e9qffdo', // Your actual EmailJS template ID
+            userId: 'QJCeC1YGKyE5WjgEj', // Your actual EmailJS user ID
             recipientEmail: 'mwanga02717@gmail.com' // Your email address
         };
         
