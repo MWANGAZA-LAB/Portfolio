@@ -38,11 +38,6 @@ cd portfolio
 2. Click the install button or use browser prompt
 3. Enjoy the native app experience!
 
-## **Get In Touch**
-- **Portfolio**: [cmo-portfolio.com](https://cmo-portfolio.com)
-- **GitHub**: [github.com/cmo](https://github.com/cmo)
-- **LinkedIn**: [linkedin.com/in/cmo](https://linkedin.com/in/cmo)
-
 ---
 
 *Last updated: December 2024*
