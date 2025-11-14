@@ -36,32 +36,35 @@
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon-32x32.svg">
+    <link rel="icon" type="image/svg+xml" sizes="16x16" href="/favicon-16x16.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.svg">
     
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
+    
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <div class="nav-logo">
                 <span class="logo-text">Collins Mwanga Okoth (CMO)</span>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#projects" class="nav-link">Projects</a></li>
-                <li><a href="#skills" class="nav-link">Skills</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
+            <ul class="nav-menu" role="menubar" aria-label="Main menu">
+                <li role="none"><a href="#home" class="nav-link" role="menuitem">Home</a></li>
+                <li role="none"><a href="#about" class="nav-link" role="menuitem">About</a></li>
+                <li role="none"><a href="#projects" class="nav-link" role="menuitem">Projects</a></li>
+                <li role="none"><a href="#skills" class="nav-link" role="menuitem">Skills</a></li>
+                <li role="none"><a href="#contact" class="nav-link" role="menuitem">Contact</a></li>
             </ul>
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode">
                 <i class="fas fa-sun"></i>
             </button>
-            <div class="hamburger">
+            <div class="hamburger" role="button" aria-label="Toggle mobile menu" aria-expanded="false" tabindex="0">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -69,8 +72,11 @@
         </div>
     </nav>
 
+    <!-- Main content area -->
+    <main id="main-content">
+    
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero" role="banner" aria-label="Introduction">
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">
@@ -82,8 +88,8 @@
                     Specializing in Bitcoin applications, AI-powered chatbots, and scalable web platforms.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#projects" class="btn btn-primary">View Projects</a>
-                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    <a href="#projects" class="btn btn-primary" aria-label="View my projects">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary" aria-label="Get in touch with me">Get In Touch</a>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
@@ -118,9 +124,9 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about">
+    <section id="about" class="about" role="region" aria-labelledby="about-heading">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
+            <h2 class="section-title" id="about-heading">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
                     <p class="about-intro">
@@ -167,9 +173,9 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="projects">
+    <section id="projects" class="projects" role="region" aria-labelledby="projects-heading">
         <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
+            <h2 class="section-title" id="projects-heading">Featured Projects</h2>
             <div class="projects-grid">
                 
                 <!-- Privacy Jenga -->
@@ -234,70 +240,6 @@
                     </div>
                     <div class="project-links">
                         <a href="https://github.com/MWANGAZA-LAB/bitmshauri-bot" class="project-link" target="_blank">
-                            <i class="fab fa-github"></i> View Code
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Rada_Btc_Pay Bot -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="project-status">Payments</div>
-                    </div>
-                    <h3 class="project-title">Rada_Btc_Pay Bot</h3>
-                    <p class="project-description">
-                        Telegram bot that generates Bitcoin and Lightning invoices, tracks confirmations,
-                        and notifies users in real-time. Designed for merchants and communities in East Africa.
-                    </p>
-                    <div class="project-features">
-                        <span class="feature">BOLT11 Invoices</span>
-                        <span class="feature">On-chain & Lightning</span>
-                        <span class="feature">Webhook Notifications</span>
-                        <span class="feature">Merchant-friendly</span>
-                    </div>
-                    <div class="project-tech">
-                        <span class="tech-tag">Python</span>
-                        <span class="tech-tag">FastAPI</span>
-                        <span class="tech-tag">Telegram Bot</span>
-                        <span class="tech-tag">LNURL</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/MWANGAZA-LAB/Rada_Btc_Pay" class="project-link" target="_blank">
-                            <i class="fab fa-github"></i> View Code
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Bitsacco Bot -->
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">
-                            <i class="fas fa-piggy-bank"></i>
-                        </div>
-                        <div class="project-status">Fintech</div>
-                    </div>
-                    <h3 class="project-title">Bitsacco Bot</h3>
-                    <p class="project-description">
-                        Savings and group-contribution Telegram bot enabling Bitcoin-based savings circles,
-                        transparent ledgers, and automated contribution reminders.
-                    </p>
-                    <div class="project-features">
-                        <span class="feature">Group Savings</span>
-                        <span class="feature">Contribution Tracking</span>
-                        <span class="feature">Bitcoin-first</span>
-                        <span class="feature">Admin Tools</span>
-                    </div>
-                    <div class="project-tech">
-                        <span class="tech-tag">TypeScript</span>
-                        <span class="tech-tag">Node.js</span>
-                        <span class="tech-tag">Telegram Bot</span>
-                        <span class="tech-tag">PostgreSQL</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="https://github.com/MWANGAZA-LAB/Bitsaccobot" class="project-link" target="_blank">
                             <i class="fab fa-github"></i> View Code
                         </a>
                     </div>
@@ -551,9 +493,9 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <section id="contact" class="contact" role="region" aria-labelledby="contact-heading">
         <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
+            <h2 class="section-title" id="contact-heading">Get In Touch</h2>
             <div class="contact-content">
                 <div class="contact-info">
                     <h3>Let's Build Something Amazing Together</h3>
@@ -600,32 +542,35 @@
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form id="contactForm">
+                    <form id="contactForm" role="form" aria-label="Contact form">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" id="name" name="name" required>
+                            <input type="text" id="name" name="name" required aria-required="true" aria-label="Your name">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" required aria-required="true" aria-label="Your email address">
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" required>
+                            <input type="text" id="subject" name="subject" required aria-required="true" aria-label="Message subject">
                         </div>
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
+                            <textarea id="message" name="message" rows="5" required aria-required="true" aria-label="Your message"></textarea></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
+                        <button type="submit" class="btn btn-primary" aria-label="Send message">Send Message</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
 
+    </main>
+    <!-- End main content -->
+
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer" role="contentinfo" aria-label="Site footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-left">
@@ -656,6 +601,8 @@
 
     <!-- EmailJS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- EmailJS Configuration (fallback to example if config.js doesn't exist) -->
+    <script src="config.js" onerror="console.warn('config.js not found, using example config')"></script>
     <script src="script.js"></script>
 </body>
 </html>

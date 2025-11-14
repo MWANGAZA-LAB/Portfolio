@@ -1,0 +1,26 @@
+# robots.txt for CMO Portfolio
+# https://mwangaza-lab.github.io/Portfolio/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mwangaza-lab.github.io/Portfolio/sitemap.xml
+
+# Disallow configuration files
+Disallow: /config.js
+Disallow: /.git/
+Disallow: /.github/
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Crawl-delay (optional, helps prevent overloading)
+Crawl-delay: 1

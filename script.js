@@ -6,8 +6,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Toggle mobile menu
     hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
+        const isActive = hamburger.classList.toggle('active');
         navMenu.classList.toggle('active');
+        
+        // Update ARIA attributes for accessibility
+        hamburger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        
+        // Focus first menu item when opening
+        if (isActive) {
+            const firstLink = navMenu.querySelector('.nav-link');
+            if (firstLink) {
+                setTimeout(() => firstLink.focus(), 100);
+            }
+        }
     });
 
     // Close mobile menu when clicking on a link
@@ -150,12 +161,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Utility functions
+    /**
+     * Validates email format using regex
+     * @param {string} email - The email address to validate
+     * @returns {boolean} True if email is valid, false otherwise
+     */
     function isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
 
+    /**
+     * Displays a notification message to the user
+     * @param {string} message - The message to display
+     * @param {string} [type='info'] - The notification type (success, error, info, warning)
+     */
     function showNotification(message, type = 'info') {
         // Remove existing notifications
         const existingNotifications = document.querySelectorAll('.notification');
@@ -232,7 +252,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add typing effect to hero title
+    /**
+     * Creates a typewriter animation effect for text
+     * @param {HTMLElement} element - The element to apply the effect to
+     * @param {string} text - The text to type out
+     * @param {number} [speed=50] - The typing speed in milliseconds
+     */
     function typeWriter(element, text, speed = 50) {
         let i = 0;
         element.innerHTML = '';
@@ -288,6 +313,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Escape') {
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+        
+        // Enter or Space key on hamburger menu
+        if (e.target.classList.contains('hamburger') && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            hamburger.click();
+        }
+        
+        // Tab navigation trap for mobile menu when open
+        if (navMenu.classList.contains('active') && e.key === 'Tab') {
+            const focusableElements = navMenu.querySelectorAll('a[href]');
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            
+            if (e.shiftKey && document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement.focus();
+            }
         }
     });
 
@@ -317,6 +364,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
     const html = document.documentElement;
     
+    /**
+     * Toggles between light and dark theme
+     * Updates UI elements and saves preference to localStorage
+     */
     function toggleTheme() {
         const currentTheme = html.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -366,6 +417,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== PERFORMANCE MONITORING & ANALYTICS =====
 
 // Performance Metrics
+/**
+ * Tracks and logs web page performance metrics
+ * Monitors load time, navigation timing, and paint metrics
+ */
 function trackPerformance() {
     if ('performance' in window) {
         // Navigation Timing API
@@ -564,7 +619,11 @@ function initializeTracking() {
 
 // ===== ENHANCED PERFORMANCE MONITORING DASHBOARD =====
 
-// Performance Dashboard Class
+/**
+ * Performance Dashboard for monitoring and displaying web vitals
+ * Tracks page load, Core Web Vitals, user interactions, and errors
+ * @class
+ */
 class PerformanceDashboard {
     constructor() {
         this.metrics = {
@@ -851,7 +910,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ===== ENHANCED PWA FUNCTIONALITY =====
 
-// PWA Manager Class
+/**
+ * Manages Progressive Web App functionality
+ * Handles installation prompts, offline detection, and service worker updates
+ * @class
+ */
 class PWAManager {
     constructor() {
         this.deferredPrompt = null;
@@ -1474,19 +1537,24 @@ if ('serviceWorker' in navigator) {
 
 // ===== ENHANCED CONTACT FORM WITH OFFLINE SUPPORT =====
 
-// Contact Form Manager
+/**
+ * Manages contact form functionality with offline support
+ * Handles form validation, EmailJS integration, and offline queueing
+ * @class
+ */
 class ContactFormManager {
     constructor() {
         this.form = null;
         this.offlineQueue = [];
         this.isOnline = navigator.onLine;
         
-        // EmailJS Configuration
-        this.emailjsConfig = {
-            serviceId: 'service_g7phy0j', // Your actual EmailJS service ID
-            templateId: 'template_e9qffdo', // Your actual EmailJS template ID
-            userId: 'QJCeC1YGKyE5WjgEj', // Your actual EmailJS user ID
-            recipientEmail: 'mwanga02717@gmail.com' // Your email address
+        // EmailJS Configuration - Load from external config file
+        // If config.js is not available, use placeholder values
+        this.emailjsConfig = typeof emailjsConfig !== 'undefined' ? emailjsConfig : {
+            serviceId: 'YOUR_SERVICE_ID',
+            templateId: 'YOUR_TEMPLATE_ID',
+            userId: 'YOUR_PUBLIC_KEY',
+            recipientEmail: 'YOUR_EMAIL@example.com'
         };
         
         this.init();
